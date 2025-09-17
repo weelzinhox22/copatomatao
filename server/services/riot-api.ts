@@ -202,7 +202,11 @@ export interface Team {
 
 class RiotAPIService {
   private requestCache = new Map<string, { data: any; timestamp: number }>();
-  private readonly CACHE_DURATION = 2 * 60 * 1000; // 2 minutes cache (reduzido para dados mais frescos)
+  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache (aumentado para reduzir requisições)
+  private requestQueue: Array<() => Promise<any>> = [];
+  private isProcessingQueue = false;
+  private lastRequestTime = 0;
+  private readonly MIN_REQUEST_INTERVAL = 100; // 100ms entre requisições (10 req/s max)
 
   constructor() {
     console.log(`Riot API initialized with key: ${RIOT_API_KEY ? RIOT_API_KEY.substring(0, 10) + '...' : 'NOT_SET'}`);
@@ -227,6 +231,34 @@ class RiotAPIService {
     console.log('Riot API cache cleared');
   }
 
+  private async processQueue(): Promise<void> {
+    if (this.isProcessingQueue || this.requestQueue.length === 0) {
+      return;
+    }
+
+    this.isProcessingQueue = true;
+
+    while (this.requestQueue.length > 0) {
+      const request = this.requestQueue.shift();
+      if (request) {
+        try {
+          await request();
+        } catch (error) {
+          console.error('Request in queue failed:', error);
+        }
+      }
+
+      // Rate limiting: wait between requests
+      const timeSinceLastRequest = Date.now() - this.lastRequestTime;
+      if (timeSinceLastRequest < this.MIN_REQUEST_INTERVAL) {
+        await new Promise(resolve => setTimeout(resolve, this.MIN_REQUEST_INTERVAL - timeSinceLastRequest));
+      }
+      this.lastRequestTime = Date.now();
+    }
+
+    this.isProcessingQueue = false;
+  }
+
   private async makeRequest<T>(url: string, retries: number = 3): Promise<T> {
     // Check cache first
     const cachedData = this.getCachedData(url);
@@ -234,62 +266,76 @@ class RiotAPIService {
       return cachedData;
     }
 
-    console.log(`Making Riot API request to: ${url}`);
-    console.log(`Using API key: ${RIOT_API_KEY ? RIOT_API_KEY.substring(0, 10) + '...' : 'NOT_SET'}`);
-    
-    if (!RIOT_API_KEY || RIOT_API_KEY === 'NOT_SET') {
-      throw new Error('Riot API key is not configured');
-    }
-    
-    for (let attempt = 1; attempt <= retries; attempt++) {
-      try {
-        const response = await fetch(url, {
-          headers: {
-            'X-Riot-Token': RIOT_API_KEY,
-            'Accept': 'application/json'
-          }
-        });
+    return new Promise((resolve, reject) => {
+      const executeRequest = async () => {
+        console.log(`Making Riot API request to: ${url}`);
+        console.log(`Using API key: ${RIOT_API_KEY ? RIOT_API_KEY.substring(0, 10) + '...' : 'NOT_SET'}`);
+        
+        if (!RIOT_API_KEY || RIOT_API_KEY === 'NOT_SET') {
+          reject(new Error('Riot API key is not configured'));
+          return;
+        }
+        
+        for (let attempt = 1; attempt <= retries; attempt++) {
+          try {
+            const response = await fetch(url, {
+              headers: {
+                'X-Riot-Token': RIOT_API_KEY,
+                'Accept': 'application/json'
+              }
+            });
 
-        console.log(`Riot API response status: ${response.status} - ${response.statusText}`);
+            console.log(`Riot API response status: ${response.status} - ${response.statusText}`);
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error(`Riot API Error: ${response.status} - ${response.statusText}`, errorText);
-          
-          if (response.status === 403) {
-            throw new Error('API key is invalid or expired');
-          } else if (response.status === 404) {
-            throw new Error('Player not found');
-          } else if (response.status === 429) {
-            // Rate limit exceeded - wait and retry
-            if (attempt < retries) {
-              const waitTime = Math.pow(2, attempt) * 2000; // Increased wait time: 4s, 8s, 16s
-              console.log(`Rate limit exceeded. Waiting ${waitTime}ms before retry ${attempt + 1}/${retries}`);
-              await new Promise(resolve => setTimeout(resolve, waitTime));
-              continue;
-            } else {
-              throw new Error('Rate limit exceeded - max retries reached');
+            if (!response.ok) {
+              const errorText = await response.text();
+              console.error(`Riot API Error: ${response.status} - ${response.statusText}`, errorText);
+              
+              if (response.status === 403) {
+                reject(new Error('API key is invalid or expired'));
+                return;
+              } else if (response.status === 404) {
+                reject(new Error('Player not found'));
+                return;
+              } else if (response.status === 429) {
+                // Rate limit exceeded - wait and retry
+                if (attempt < retries) {
+                  const waitTime = Math.pow(2, attempt) * 3000; // Increased wait time: 6s, 12s, 24s
+                  console.log(`Rate limit exceeded. Waiting ${waitTime}ms before retry ${attempt + 1}/${retries}`);
+                  await new Promise(resolve => setTimeout(resolve, waitTime));
+                  continue;
+                } else {
+                  reject(new Error('Rate limit exceeded - max retries reached'));
+                  return;
+                }
+              }
+              
+              reject(new Error(`Riot API Error: ${response.status} - ${response.statusText}`));
+              return;
             }
-          }
-          
-          throw new Error(`Riot API Error: ${response.status} - ${response.statusText}`);
-        }
 
-        const data = await response.json();
-        console.log('Riot API response data received successfully');
-        
-        // Cache the successful response
-        this.setCachedData(url, data);
-        
-        return data;
-      } catch (error) {
-        if (attempt === retries) {
-          console.error('Riot API request failed after all retries:', error);
-          throw error;
+            const data = await response.json();
+            console.log('Riot API response data received successfully');
+            
+            // Cache the successful response
+            this.setCachedData(url, data);
+            
+            resolve(data);
+            return;
+          } catch (error) {
+            if (attempt === retries) {
+              console.error('Riot API request failed after all retries:', error);
+              reject(error);
+              return;
+            }
+            console.log(`Attempt ${attempt} failed, retrying...`);
+          }
         }
-        console.log(`Attempt ${attempt} failed, retrying...`);
-      }
-    }
+      };
+
+      this.requestQueue.push(executeRequest);
+      this.processQueue();
+    });
   }
 
   // Account-v1: Get account by Riot ID
@@ -449,13 +495,13 @@ class RiotAPIService {
         console.warn('Using mock mastery data due to API limitation');
       }
       
-      // 5. Try to get recent matches (expanded to 20)
+      // 5. Try to get recent matches (limitado para evitar rate limit)
       try {
         console.log('Step 5: Getting recent matches...');
-        const matchIds = await this.getMatchIdsByPuuid(account.puuid, 20);
+        const matchIds = await this.getMatchIdsByPuuid(account.puuid, 5); // Reduzido para 5 partidas
         if (matchIds.length > 0) {
           matches = await Promise.all(
-            matchIds.slice(0, 15).map(async matchId => {
+            matchIds.slice(0, 5).map(async matchId => { // Processar apenas 5 partidas
               try {
                 return await this.getMatchById(matchId);
               } catch (error) {
