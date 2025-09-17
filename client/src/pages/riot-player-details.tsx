@@ -433,7 +433,6 @@ export default function RiotPlayerDetails() {
                 </div>
               </CardContent>
             </Card>
-
           </div>
         </div>
       </div>
