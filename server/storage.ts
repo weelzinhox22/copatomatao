@@ -1,5 +1,3 @@
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
 import { eq, desc, and } from "drizzle-orm";
 import { 
   users, teams, teamMembers, matches, news,
@@ -9,9 +7,7 @@ import {
   type Match, type InsertMatch,
   type News, type InsertNews
 } from "@shared/schema";
-
-const sql = neon(process.env.DATABASE_URL!);
-const db = drizzle(sql);
+import { db } from "./db";
 
 export interface IStorage {
   // Users
@@ -65,12 +61,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createUser(user: InsertUser): Promise<User> {
-    const result = await db.insert(users).values(user).returning();
+    const result = await db.insert(users).values(user as any).returning();
     return result[0];
   }
 
   async updateUser(id: string, updates: Partial<InsertUser>): Promise<User> {
-    const result = await db.update(users).set(updates).where(eq(users.id, id)).returning();
+    const result = await db.update(users).set(updates as any).where(eq(users.id, id)).returning();
     return result[0];
   }
 
@@ -118,7 +114,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async addTeamMember(member: InsertTeamMember): Promise<TeamMember> {
-    const result = await db.insert(teamMembers).values(member).returning();
+    const result = await db.insert(teamMembers).values(member as any).returning();
     return result[0];
   }
 
@@ -142,12 +138,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createMatch(match: InsertMatch): Promise<Match> {
-    const result = await db.insert(matches).values(match).returning();
+    const result = await db.insert(matches).values(match as any).returning();
     return result[0];
   }
 
   async updateMatch(id: string, updates: Partial<InsertMatch>): Promise<Match> {
-    const result = await db.update(matches).set(updates).where(eq(matches.id, id)).returning();
+    const result = await db.update(matches).set(updates as any).where(eq(matches.id, id)).returning();
     return result[0];
   }
 

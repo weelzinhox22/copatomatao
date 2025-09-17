@@ -3,11 +3,33 @@ import { createServer, type Server } from "http";
 import bcrypt from "bcryptjs";
 import session from "express-session";
 import { storage } from "./storage";
-import { insertUserSchema, insertTeamSchema, insertNewsSchema } from "@shared/schema";
+import { insertUserSchema, insertTeamSchema, insertNewsSchema, users } from "@shared/schema";
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+
+const sql = neon(process.env.DATABASE_URL!);
+const db = drizzle(sql);
 
 declare module "express-session" {
   interface SessionData {
     userId: string;
+  }
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        email: string;
+        username: string;
+        role: "captain" | "player" | "admin";
+        fullName?: string;
+        preferredLane?: "top" | "jungle" | "mid" | "adc" | "support";
+        riotId?: string;
+        createdAt: Date;
+      };
+    }
   }
 }
 
@@ -92,7 +114,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get("/api/auth/me", requireAuth, (req, res) => {
-    const { password, ...user } = req.user;
+    if (!req.user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+    const { password, ...user } = req.user as any;
     res.json(user);
   });
 
@@ -108,13 +133,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/teams", requireAuth, async (req, res) => {
     try {
-      if (req.user.role !== "captain") {
+      if (!req.user || req.user.role !== "captain") {
         return res.status(403).json({ message: "Only captains can create teams" });
       }
 
       const teamData = insertTeamSchema.parse({
         ...req.body,
-        captainId: req.user.id,
+        captainId: req.user!.id,
       });
 
       const team = await storage.createTeam(teamData);
@@ -136,7 +161,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/teams/:id/members", requireAuth, async (req, res) => {
     try {
       const team = await storage.getTeam(req.params.id);
-      if (!team || team.captainId !== req.user.id) {
+      if (!team || !req.user || team.captainId !== req.user.id) {
         return res.status(403).json({ message: "Only team captain can add members" });
       }
 
@@ -170,6 +195,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Users routes
+  app.get("/api/users", async (req, res) => {
+    try {
+      const allUsers = await db.select({
+        id: users.id,
+        email: users.email,
+        username: users.username,
+        role: users.role,
+        fullName: users.fullName,
+        preferredLane: users.preferredLane,
+        riotId: users.riotId,
+        createdAt: users.createdAt,
+      }).from(users);
+      res.json(allUsers);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+
   // News routes
   app.get("/api/news", async (req, res) => {
     try {
@@ -193,7 +237,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const newsData = insertNewsSchema.parse({
         ...req.body,
-        authorId: req.user.id,
+        authorId: req.user!.id,
       });
 
       const news = await storage.createNews(newsData);
