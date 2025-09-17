@@ -154,15 +154,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/riot/player/:gameName/:tagLine", async (req, res) => {
     try {
       const { gameName, tagLine } = req.params;
-      console.log(`Fetching player data for: ${gameName}#${tagLine}`);
+      console.log(`[RENDER] Fetching player data for: ${gameName}#${tagLine}`);
+      console.log(`[RENDER] Environment check - RIOT_API_KEY exists: ${!!process.env.RIOT_API_KEY}`);
+      console.log(`[RENDER] Environment check - NODE_ENV: ${process.env.NODE_ENV}`);
       
       const playerData = await riotAPI.getCompletePlayerData(gameName, tagLine);
+      console.log(`[RENDER] Successfully fetched player data for: ${gameName}#${tagLine}`);
       res.json(playerData);
     } catch (error: any) {
-      console.error("Error fetching player data:", error);
+      console.error(`[RENDER] Error fetching player data for ${req.params.gameName}#${req.params.tagLine}:`, error);
+      console.error(`[RENDER] Error stack:`, error.stack);
       res.status(500).json({ 
         error: "Failed to fetch player data from Riot API",
-        message: error.message 
+        message: error.message,
+        details: error.stack
       });
     }
   });
