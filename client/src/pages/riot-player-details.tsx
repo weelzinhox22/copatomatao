@@ -77,27 +77,28 @@ export default function RiotPlayerDetails() {
   }
 
   return (
-    <div className="min-h-screen pt-16 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <Link href="/players">
-              <Button variant="ghost">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Voltar aos Jogadores
+    <>
+      <div className="min-h-screen pt-16 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <Link href="/players">
+                <Button variant="ghost">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Voltar aos Jogadores
+                </Button>
+              </Link>
+              <Button 
+                onClick={handleRefresh} 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-2 hover:bg-primary/10 transition-colors"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Atualizar Dados
               </Button>
-            </Link>
-            <Button 
-              onClick={handleRefresh} 
-              variant="outline" 
-              size="sm" 
-              className="flex items-center gap-2 hover:bg-primary/10 transition-colors"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Atualizar Dados
-            </Button>
-          </div>
+            </div>
 
           {/* Player Header Card */}
           <div className="glass-card p-8 rounded-xl glow-soft">
@@ -437,6 +438,6 @@ export default function RiotPlayerDetails() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
