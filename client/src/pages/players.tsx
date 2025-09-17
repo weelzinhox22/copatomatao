@@ -1,283 +1,301 @@
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, Search, Filter, Trophy, Star } from "lucide-react";
+import { User, Search, ExternalLink, Trophy } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
-import { useState } from "react";
+import AnimatedInfographic from "@/components/animated-infographic";
+import RiotPlayerCard from "@/components/riot-player-card";
+import { useRiotPlayer } from "@/hooks/useRiotAPI";
 
-const laneIcons = {
-  top: "🗡️",
-  jungle: "🌲", 
-  mid: "⚡",
-  adc: "🏹",
-  support: "🛡️"
-};
 
-const laneColors = {
-  top: "bg-red-500",
-  jungle: "bg-green-500",
-  mid: "bg-blue-500", 
-  adc: "bg-yellow-500",
-  support: "bg-purple-500"
-};
+// Jogadores oficiais do campeonato Copa Tomatão
+const officialPlayers = [
+  {
+    gameName: "welziinho",
+    tagLine: "wel",
+    lane: "MID/JUNGLE",
+    team: "Indefinido",
+    description: "Mid laner e jungler versátil com excelente controle de wave, roaming e timing de ganks. Conhecido por sua adaptabilidade entre as duas posições."
+  },
+  {
+    gameName: "LDates",
+    tagLine: "BR1", 
+    lane: "JUNGLE",
+    team: "Kongs do Atlântico",
+    description: "Jungler experiente com excelente controle de objetivos e timing de ganks. Conhecido por suas decisões estratégicas em momentos cruciais."
+  },
+  {
+    gameName: "Beiço Reformed",
+    tagLine: "Cold",
+    lane: "ADC",
+    team: "Indefinido", 
+    description: "ADC preciso com excelente posicionamento em teamfights e farm consistente. Conhecido por sua capacidade de carry em late game."
+  },
+  {
+    gameName: "AZR Aldeath",
+    tagLine: "mond",
+    lane: "MID/TOP",
+    team: "Os Fimos",
+    description: "Mid laner e top laner versátil com excelente controle de lane e versatilidade de campeões. Conhecido por sua adaptabilidade entre as duas posições."
+  },
+  {
+    gameName: "guizão rapidão",
+    tagLine: "teco",
+    lane: "SUPPORT",
+    team: "Indefinido",
+    description: "Support versátil conhecido por suas jogadas criativas e excelente visão de jogo. Conhecido por suas jogadas inovadoras."
+  },
+  {
+    gameName: "SOU A GUILHOTINA",
+    tagLine: "00000",
+    lane: "TOP",
+    team: "Indefinido",
+    description: "Top laner dominante com estilo de jogo agressivo e excelente controle de wave. Conhecido por suas jogadas ousadas e carry potential."
+  },
+  {
+    gameName: "BLT Reformed",
+    tagLine: "BLT",
+    lane: "JUNGLE/SUPPORT",
+    team: "Indefinido",
+    description: "Jungler e support versátil com grande versatilidade de campeões e excelente controle de objetivos. Conhecido por sua adaptabilidade."
+  },
+  {
+    gameName: "Theushubu",
+    tagLine: "ZoioO",
+    lane: "TOP/JUNGLE",
+    team: "Zeca e os Urubus",
+    description: "Top laner e jungler versátil com excelente farm, posicionamento e timing de ganks. Conhecido por sua versatilidade entre as duas posições."
+  },
+  {
+    gameName: "ShadowStrike",
+    tagLine: "BR1",
+    lane: "JUNGLE",
+    team: "Indefinido",
+    description: "Jungler agressivo com excelente timing de ganks"
+  },
+  {
+    gameName: "MidKing",
+    tagLine: "BR1",
+    lane: "MID",
+    team: "Indefinido",
+    description: "Mid laner dominante com pool de campeões diversificada"
+  },
+  {
+    gameName: "SupportPro",
+    tagLine: "BR1",
+    lane: "SUPPORT",
+    team: "Indefinido",
+    description: "Support estratégico com excelente visão de jogo"
+  },
+  {
+    gameName: "TopDestroyer",
+    tagLine: "BR1",
+    lane: "TOP",
+    team: "Indefinido",
+    description: "Top laner tank com excelente controle de teamfight"
+  },
+  {
+    gameName: "ADCPro",
+    tagLine: "BR1",
+    lane: "ADC",
+    team: "Indefinido",
+    description: "ADC preciso com excelente kiting e posicionamento"
+  },
+  {
+    gameName: "JungleKing",
+    tagLine: "BR1",
+    lane: "JUNGLE",
+    team: "Indefinido",
+    description: "Jungler estratégico com controle total de objetivos"
+  },
+  {
+    gameName: "MidMaster",
+    tagLine: "BR1",
+    lane: "MID",
+    team: "Indefinido",
+    description: "Mid laner técnico com excelente roaming"
+  },
+  {
+    gameName: "SupportKing",
+    tagLine: "BR1",
+    lane: "SUPPORT",
+    team: "Indefinido",
+    description: "Support versátil com excelente proteção de carry"
+  },
+  {
+    gameName: "TopLegend",
+    tagLine: "BR1",
+    lane: "TOP",
+    team: "Indefinido",
+    description: "Top laner experiente com excelente macro game"
+  },
+  {
+    gameName: "ADCMaster",
+    tagLine: "BR1",
+    lane: "ADC",
+    team: "Indefinido",
+    description: "ADC técnico com excelente farm e teamfight"
+  },
+  {
+    gameName: "JunglePro",
+    tagLine: "BR1",
+    lane: "JUNGLE",
+    team: "Indefinido",
+    description: "Jungler versátil com excelente controle de mapa"
+  }
+];
 
-export default function Players() {
-  const { data: user } = useAuth();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLane, setSelectedLane] = useState<string>("all");
-  
-  // Note: This would typically fetch from /api/users?role=player or similar endpoint
-  const { data: players, isLoading } = useQuery({
-    queryKey: ["/api/users"],
-  });
+
+// Componente para exibir jogador oficial
+function OfficialPlayerCard({ player }: { player: typeof officialPlayers[0] }) {
+  const { data: playerData, isLoading, error } = useRiotPlayer(player.gameName, player.tagLine);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="animate-pulse">
-            <div className="h-12 bg-muted rounded mb-8 max-w-md"></div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="h-64 bg-muted rounded-lg"></div>
-              ))}
+      <div className="glass-card p-4 rounded-xl glow-hover animate-pulse">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-12 h-12 bg-gray-700 rounded-full"></div>
+          <div className="flex-1">
+            <div className="h-5 bg-gray-700 rounded mb-1"></div>
+            <div className="h-3 bg-gray-700 rounded w-2/3"></div>
             </div>
           </div>
+        <div className="space-y-1">
+          <div className="h-3 bg-gray-700 rounded"></div>
+          <div className="h-3 bg-gray-700 rounded w-3/4"></div>
         </div>
       </div>
     );
   }
 
-  // Filter players based on search and lane
-  const filteredPlayers = players?.filter((player: any) => {
-    const matchesSearch = player.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (player.fullName && player.fullName.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesLane = selectedLane === "all" || player.preferredLane === selectedLane;
-    return player.role === "player" && matchesSearch && matchesLane;
-  }) || [];
+  if (error) {
+    return (
+      <div className="glass-card p-4 rounded-xl glow-hover border border-red-500/30">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+            <User className="w-6 h-6 text-gray-400" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-white">{player.gameName}#{player.tagLine}</h3>
+            <p className="text-gray-400 text-sm">{player.team} • {player.lane}</p>
+          </div>
+        </div>
+        <p className="text-gray-300 text-sm mb-2">{player.description}</p>
+        <p className="text-red-400 text-xs">Erro ao carregar dados</p>
+      </div>
+    );
+  }
+
+  const rank = playerData?.rank;
+  const recentStats = playerData?.recentStats;
+
+  return (
+    <Link href={`/riot-player/${player.gameName}/${player.tagLine}`}>
+      <div className="glass-card p-4 rounded-xl glow-hover hover:glow-medium transition-all duration-300 group cursor-pointer">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
+            <span className="text-lg font-bold text-white">
+              {player.gameName.charAt(0).toUpperCase()}
+            </span>
+        </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-bold text-white truncate">{player.gameName}#{player.tagLine}</h3>
+            <p className="text-gray-400 text-sm">{player.team} • {player.lane}</p>
+          </div>
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+            <ExternalLink className="w-4 h-4 text-white" />
+          </div>
+        </div>
+
+        <p className="text-gray-300 text-sm mb-3 line-clamp-2">{player.description}</p>
+        
+        {rank && recentStats ? (
+          <div className="grid grid-cols-4 gap-2 pt-3 border-t border-white/10">
+            <div className="text-center">
+              <div className="text-sm font-bold text-primary">{rank.tier} {rank.rank}</div>
+              <div className="text-xs text-gray-400">Rank</div>
+            </div>
+            <div className="text-center">
+              <div className="text-sm font-bold text-secondary">{rank.leaguePoints}</div>
+              <div className="text-xs text-gray-400">LP</div>
+            </div>
+            <div className="text-center">
+              <div className="text-sm font-bold text-green-400">{recentStats.wins}V</div>
+              <div className="text-xs text-gray-400">Wins</div>
+            </div>
+            <div className="text-center">
+              <div className="text-sm font-bold text-yellow-400">{recentStats.winRate}%</div>
+              <div className="text-xs text-gray-400">WR</div>
+              </div>
+            </div>
+          ) : (
+          <div className="pt-3 border-t border-white/10">
+            <p className="text-center text-gray-500 text-xs">Dados não disponíveis</p>
+                    </div>
+                  )}
+      </div>
+    </Link>
+  );
+}
+
+export default function Players() {
+  const { data: user } = useAuth();
 
   return (
     <div className="min-h-screen pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-gaming font-bold mb-4">
-            <span className="gradient-text">JOGADORES</span> PARTICIPANTES
+        {/* Header Simplificado */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4 neon-text text-glow-soft">
+            Jogadores da Copa Tomatão
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Conheça todos os jogadores que participam do campeonato
-          </p>
+                    </div>
+
+        {/* Busca de Jogadores */}
+        <div className="mb-12">
+          <RiotPlayerCard />
+                    </div>
+
+        {/* Jogadores Oficiais do Campeonato */}
+        <div className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-heading font-bold text-white neon-text mb-4 flex items-center justify-center gap-3">
+              <Trophy className="w-8 h-8 text-yellow-400" />
+              Jogadores Oficiais ({officialPlayers.length})
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto mb-8">
+              Os jogadores oficiais do campeonato com dados atualizados da API da Riot Games
+            </p>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar jogadores..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-              data-testid="input-search-players"
-            />
-          </div>
-          <div className="md:w-48">
-            <Select value={selectedLane} onValueChange={setSelectedLane}>
-              <SelectTrigger data-testid="select-lane-filter">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Filtrar por lane" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas as lanes</SelectItem>
-                <SelectItem value="top">Top</SelectItem>
-                <SelectItem value="jungle">Jungle</SelectItem>
-                <SelectItem value="mid">Mid</SelectItem>
-                <SelectItem value="adc">ADC</SelectItem>
-                <SelectItem value="support">Support</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Players Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredPlayers.length === 0 ? (
-            <div className="col-span-full text-center py-12">
-              <div className="max-w-md mx-auto">
-                <User className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-xl font-semibold mb-2" data-testid="text-no-players-title">
-                  {searchTerm || selectedLane !== "all" ? "Nenhum Jogador Encontrado" : "Nenhum Jogador Inscrito"}
-                </h3>
-                <p className="text-muted-foreground mb-6" data-testid="text-no-players-description">
-                  {searchTerm || selectedLane !== "all" 
-                    ? "Tente ajustar os filtros de busca." 
-                    : "Seja o primeiro jogador a se cadastrar no campeonato!"
-                  }
-                </p>
-                {(!searchTerm && selectedLane === "all") && (
-                  <Link href="/register" data-testid="link-first-player">
-                    <Button className="neon-glow">
-                      Cadastrar-se como Jogador
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            </div>
-          ) : (
-            filteredPlayers.map((player: any, index: number) => (
-              <Card key={player.id} className="tournament-card" data-testid={`player-card-${index}`}>
-                <CardHeader className="text-center pb-4">
-                  {/* Player Avatar */}
-                  <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-                    <User className="h-8 w-8 text-white" />
-                  </div>
-                  
-                  <CardTitle className="text-lg font-gaming" data-testid={`player-username-${index}`}>
-                    {player.username}
-                  </CardTitle>
-                  
-                  {player.fullName && (
-                    <p className="text-sm text-muted-foreground" data-testid={`player-fullname-${index}`}>
-                      {player.fullName}
-                    </p>
-                  )}
-
-                  {/* Lane Badge */}
-                  {player.preferredLane && (
-                    <div className="flex justify-center mt-2">
-                      <Badge 
-                        className={`${laneColors[player.preferredLane as keyof typeof laneColors]} text-white`}
-                        data-testid={`player-lane-${index}`}
-                      >
-                        {laneIcons[player.preferredLane as keyof typeof laneIcons]} {player.preferredLane.toUpperCase()}
-                      </Badge>
-                    </div>
-                  )}
-                </CardHeader>
-                
-                <CardContent className="pt-0">
-                  <div className="space-y-4">
-                    {/* Player Stats */}
-                    <div className="grid grid-cols-2 gap-4 text-center">
-                      <div>
-                        <div className="text-lg font-bold text-primary" data-testid={`player-rank-${index}`}>
-                          Gold III
-                        </div>
-                        <div className="text-xs text-muted-foreground">Elo Atual</div>
-                      </div>
-                      <div>
-                        <div className="text-lg font-bold text-secondary" data-testid={`player-games-${index}`}>
-                          127
-                        </div>
-                        <div className="text-xs text-muted-foreground">Partidas</div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            {officialPlayers.map((player, index) => (
+              <OfficialPlayerCard key={`${player.gameName}-${player.tagLine}`} player={player} />
+            ))}
                       </div>
                     </div>
 
-                    {/* Player Info */}
-                    <div className="space-y-2">
-                      {player.riotId && (
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Riot ID:</span>
-                          <span className="font-medium font-mono" data-testid={`player-riot-id-${index}`}>
-                            {player.riotId}
-                          </span>
-                        </div>
-                      )}
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">Cadastrado:</span>
-                        <span className="font-medium" data-testid={`player-joined-${index}`}>
-                          {new Date(player.createdAt).toLocaleDateString('pt-BR')}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">Status:</span>
-                        <Badge variant="secondary" data-testid={`player-status-${index}`}>
-                          Disponível
-                        </Badge>
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        className="flex-1"
-                        data-testid={`button-view-player-${index}`}
-                      >
-                        Ver Perfil
-                      </Button>
-                      {user?.role === "captain" && (
-                        <Button 
-                          variant="ghost" 
-                          size="icon"
-                          className="text-primary hover:text-primary/80"
-                          data-testid={`button-invite-player-${index}`}
-                        >
-                          <Star className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          )}
-        </div>
-
-        {/* Lane Statistics */}
-        <div className="mt-16">
-          <Card className="neon-border max-w-4xl mx-auto">
-            <CardHeader>
-              <CardTitle className="text-center text-2xl font-gaming">
-                <span className="gradient-text">DISTRIBUIÇÃO</span> POR LANE
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-5 gap-4">
-                {Object.entries(laneIcons).map(([lane, icon]) => {
-                  const count = filteredPlayers.filter((p: any) => p.preferredLane === lane).length;
-                  return (
-                    <div key={lane} className="text-center" data-testid={`lane-stat-${lane}`}>
-                      <div className={`w-12 h-12 mx-auto mb-2 ${laneColors[lane as keyof typeof laneColors]} rounded-full flex items-center justify-center text-white text-xl`}>
-                        {icon}
-                      </div>
-                      <div className="font-bold text-lg" data-testid={`lane-count-${lane}`}>
-                        {count}
-                      </div>
-                      <div className="text-xs text-muted-foreground uppercase">
-                        {lane}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Estatísticas do Campeonato */}
+        <div className="mb-16">
+          <AnimatedInfographic />
         </div>
 
         {/* Call to Action */}
         {user?.role !== "player" && (
           <div className="mt-16 text-center">
-            <Card className="neon-border max-w-2xl mx-auto">
-              <CardContent className="pt-6">
-                <h3 className="text-xl font-gaming font-bold mb-4" data-testid="text-join-players-title">
-                  JUNTE-SE AOS JOGADORES
+            <div className="glass-card max-w-2xl mx-auto p-8 rounded-xl glow-hover">
+              <h3 className="text-2xl font-heading font-bold mb-4 neon-text" data-testid="text-join-players-title">
+                Junte-se aos Jogadores
                 </h3>
-                <p className="text-muted-foreground mb-6">
-                  Cadastre-se como jogador e participe do maior campeonato de League of Legends do Brasil.
+              <p className="text-gray-300 mb-6">
+                Cadastre-se como jogador e participe do maior campeonato de League of Legends da comunidade.
                 </p>
                 <Link href="/register" data-testid="link-join-players">
-                  <Button className="neon-glow">
+                <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white glow-hover border-0 glow-soft">
                     <User className="mr-2 h-5 w-5" />
                     Cadastrar como Jogador
                   </Button>
                 </Link>
-              </CardContent>
-            </Card>
+            </div>
           </div>
         )}
       </div>

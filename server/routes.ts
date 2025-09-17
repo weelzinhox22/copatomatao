@@ -6,6 +6,7 @@ import { storage } from "./storage";
 import { insertUserSchema, insertTeamSchema, insertNewsSchema, users } from "@shared/schema";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
+import { riotAPI } from "./services/riot-api";
 
 const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql);
@@ -253,6 +254,251 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(news);
     } catch (error) {
       res.status(400).json({ message: "Failed to update news" });
+    }
+  });
+
+  // Simple test route
+  app.get("/api/riot/simple-test", (req, res) => {
+    res.json({ message: "Riot routes are working!" });
+  });
+
+  // Riot API test route
+  app.get("/api/riot/test", async (req, res) => {
+    try {
+      console.log("Testing Riot API endpoint called");
+      // Test with a known player (Faker)
+      const testData = await riotAPI.getAccountByRiotId("Hide on bush", "KR1");
+      res.json({ success: true, data: testData });
+    } catch (error: any) {
+      console.error("Riot API test error:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message,
+        details: "API key might be invalid or expired"
+      });
+    }
+  });
+
+  // Clear Riot API cache
+  app.post("/api/riot/clear-cache", async (req, res) => {
+    try {
+      riotAPI.clearCache();
+      res.json({ success: true, message: "Cache cleared successfully" });
+    } catch (error: any) {
+      console.error("Failed to clear cache:", error);
+      res.json({ success: false, error: error.message });
+    }
+  });
+
+  // Riot API routes
+  app.get("/api/riot/player/:gameName/:tagLine", async (req, res) => {
+    try {
+      const { gameName, tagLine } = req.params;
+      console.log(`Fetching player data for: ${gameName}#${tagLine}`);
+      
+      // Verificar se os parâmetros são válidos
+      if (!gameName || !tagLine) {
+        return res.status(400).json({ error: "Game name and tag line are required" });
+      }
+      
+      const playerData = await riotAPI.getCompletePlayerData(gameName, tagLine);
+      
+      // Calcular estatísticas dos matches recentes
+      const recentStats = {
+        totalGames: playerData.recentMatches.length,
+        wins: 0,
+        kills: 0,
+        deaths: 0,
+        assists: 0
+      };
+
+      playerData.recentMatches.forEach(match => {
+        const participant = match.info.participants.find(p => p.puuid === playerData.account.puuid);
+        if (participant) {
+          if (participant.win) recentStats.wins++;
+          recentStats.kills += participant.kills;
+          recentStats.deaths += participant.deaths;
+          recentStats.assists += participant.assists;
+        }
+      });
+
+      const kda = riotAPI.calculateKDA(recentStats.kills, recentStats.deaths, recentStats.assists);
+      
+      // Get rank data (use real data if available, otherwise use mock)
+      const rankData = playerData.leagueEntries.find(entry => entry.queueType === "RANKED_SOLO_5x5") || null;
+      
+      // If we have real match data, use it to calculate wins/losses
+      let finalRankData = rankData;
+      if (rankData && playerData.recentMatches.length > 0) {
+        // Update rank data with real statistics from recent matches
+        finalRankData = {
+          ...rankData,
+          wins: recentStats.wins,
+          losses: recentStats.totalGames - recentStats.wins
+        };
+      }
+      
+      const response = {
+        account: playerData.account,
+        summoner: playerData.summoner,
+        rank: finalRankData,
+        championMasteries: playerData.championMasteries,
+        recentStats: {
+          ...recentStats,
+          kda,
+          winRate: recentStats.totalGames > 0 ? ((recentStats.wins / recentStats.totalGames) * 100).toFixed(1) : "0"
+        }
+      };
+      
+      console.log("Successfully fetched player data");
+      res.json(response);
+    } catch (error: any) {
+      console.error("Error fetching player data:", error);
+      
+      // Determine the appropriate error message and status code
+      let statusCode = 500;
+      let errorMessage = "Failed to fetch player data from Riot API";
+      
+      if (error.message.includes("404")) {
+        statusCode = 404;
+        errorMessage = "Player not found. Please check the game name and tag.";
+      } else if (error.message.includes("403")) {
+        statusCode = 403;
+        errorMessage = "API access forbidden. Please check API key.";
+      } else if (error.message.includes("429")) {
+        statusCode = 429;
+        errorMessage = "Rate limit exceeded. Please try again later.";
+      }
+      
+      res.status(statusCode).json({ error: errorMessage });
+    }
+  });
+
+  app.get("/api/riot/matches/:puuid", async (req, res) => {
+    try {
+      const { puuid } = req.params;
+      const count = parseInt(req.query.count as string || "20");
+      const start = parseInt(req.query.start as string || "0");
+      
+      const matchIds = await riotAPI.getMatchIdsByPuuid(puuid, count, start);
+      
+      // Buscar detalhes de até 15 matches
+      const matches = await Promise.all(
+        matchIds.slice(start, start + Math.min(15, matchIds.length)).map(async (matchId) => {
+          try {
+            return await riotAPI.getMatchById(matchId);
+          } catch (error) {
+            console.error(`Error fetching match ${matchId}:`, error);
+            return null;
+          }
+        })
+      );
+
+      const validMatches = matches.filter(match => match !== null);
+      
+      res.json({
+        matchIds,
+        totalMatches: matchIds.length,
+        matches: validMatches.map(match => {
+          const participant = match.info.participants.find(p => p.puuid === puuid);
+          const playerTeamId = participant?.teamId;
+          const playerTeam = match.info.teams.find(team => team.teamId === playerTeamId);
+          
+          // Calcular posição no time (rank por KDA ou damage)
+          const teamParticipants = match.info.participants.filter(p => p.teamId === playerTeamId);
+          const playerRankInTeam = teamParticipants
+            .sort((a, b) => {
+              const aKda = riotAPI.calculateKDA(a.kills, a.deaths, a.assists);
+              const bKda = riotAPI.calculateKDA(b.kills, b.deaths, b.assists);
+              return parseFloat(bKda) - parseFloat(aKda);
+            })
+            .findIndex(p => p.puuid === puuid) + 1;
+
+          return {
+            matchId: match.metadata.matchId,
+            gameCreation: match.info.gameCreation,
+            gameDuration: match.info.gameDuration,
+            gameMode: match.info.gameMode,
+            gameType: match.info.gameType,
+            mapId: match.info.mapId,
+            queueId: match.info.queueId,
+            participant: participant ? {
+              // Basic stats
+              championName: participant.championName,
+              championId: participant.championId,
+              kills: participant.kills,
+              deaths: participant.deaths,
+              assists: participant.assists,
+              win: participant.win,
+              teamPosition: participant.teamPosition,
+              teamId: participant.teamId,
+              summonerLevel: participant.summonerLevel,
+              
+              // Detailed performance
+              kda: riotAPI.calculateKDA(participant.kills, participant.deaths, participant.assists),
+              goldEarned: participant.goldEarned,
+              totalMinionsKilled: participant.totalMinionsKilled,
+              neutralMinionsKilled: participant.neutralMinionsKilled,
+              totalDamageDealtToChampions: participant.totalDamageDealtToChampions,
+              visionScore: participant.visionScore,
+              wardsPlaced: participant.wardsPlaced,
+              wardsKilled: participant.wardsKilled,
+              
+              // Items (build)
+              items: [
+                participant.item0, participant.item1, participant.item2,
+                participant.item3, participant.item4, participant.item5, participant.item6
+              ].filter(item => item !== 0),
+              
+              // Summoner spells
+              summoner1Id: participant.summoner1Id,
+              summoner2Id: participant.summoner2Id,
+              
+              // Team performance context
+              rankInTeam: playerRankInTeam,
+              teamWin: playerTeam?.win || false,
+              
+              // Advanced stats
+              doubleKills: participant.doubleKills,
+              tripleKills: participant.tripleKills,
+              quadraKills: participant.quadraKills,
+              pentaKills: participant.pentaKills,
+              largestKillingSpree: participant.largestKillingSpree,
+              firstBloodKill: participant.firstBloodKill,
+              
+              // Damage breakdown
+              physicalDamageDealtToChampions: participant.physicalDamageDealtToChampions,
+              magicDamageDealtToChampions: participant.magicDamageDealtToChampions,
+              trueDamageDealtToChampions: participant.trueDamageDealtToChampions,
+              totalDamageTaken: participant.totalDamageTaken,
+              
+              // Farm stats
+              totalMinionsKilled: participant.totalMinionsKilled,
+              neutralMinionsKilled: participant.neutralMinionsKilled
+            } : null,
+            
+            // All participants for comparison
+            allParticipants: match.info.participants.map(p => ({
+              puuid: p.puuid,
+              summonerName: p.riotIdName || p.summonerName,
+              championName: p.championName,
+              teamId: p.teamId,
+              teamPosition: p.teamPosition,
+              kills: p.kills,
+              deaths: p.deaths,
+              assists: p.assists,
+              kda: riotAPI.calculateKDA(p.kills, p.deaths, p.assists),
+              goldEarned: p.goldEarned,
+              totalDamageDealtToChampions: p.totalDamageDealtToChampions,
+              totalMinionsKilled: p.totalMinionsKilled + p.neutralMinionsKilled,
+              visionScore: p.visionScore
+            }))
+          };
+        })
+      });
+    } catch (error) {
+      console.error("Error fetching matches:", error);
+      res.status(500).json({ error: "Failed to fetch match data" });
     }
   });
 

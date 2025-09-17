@@ -46,10 +46,10 @@ export default function Tournament() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-gaming font-bold mb-4">
-            <span className="gradient-text">TORNEIO</span> 2024
+            <span className="gradient-text">COPA TOMATÃO</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Acompanhe o progresso do campeonato e todos os confrontos
+            O campeonato está prestes a começar! Acompanhe todas as informações aqui.
           </p>
         </div>
 
@@ -59,44 +59,64 @@ export default function Tournament() {
             <CardContent className="pt-6">
               <Trophy className="h-8 w-8 mx-auto mb-2 text-primary" />
               <div className="text-2xl font-gaming font-bold" data-testid="stat-total-teams">
-                {teams?.length || 0}
+                4
               </div>
-              <div className="text-sm text-muted-foreground">Times Inscritos</div>
+              <div className="text-sm text-muted-foreground">Times Confirmados</div>
             </CardContent>
           </Card>
           
           <Card className="neon-border text-center">
             <CardContent className="pt-6">
               <Users className="h-8 w-8 mx-auto mb-2 text-secondary" />
-              <div className="text-2xl font-gaming font-bold" data-testid="stat-total-matches">
-                {matches?.length || 0}
+              <div className="text-2xl font-gaming font-bold" data-testid="stat-total-players">
+                20
               </div>
-              <div className="text-sm text-muted-foreground">Partidas Total</div>
+              <div className="text-sm text-muted-foreground">Jogadores</div>
             </CardContent>
           </Card>
           
           <Card className="neon-border text-center">
             <CardContent className="pt-6">
               <Clock className="h-8 w-8 mx-auto mb-2 text-accent" />
-              <div className="text-2xl font-gaming font-bold" data-testid="stat-completed-matches">
-                {matches?.filter((m: any) => m.status === "completed").length || 0}
+              <div className="text-2xl font-gaming font-bold" data-testid="stat-tournament-status">
+                Em Breve
               </div>
-              <div className="text-sm text-muted-foreground">Concluídas</div>
+              <div className="text-sm text-muted-foreground">Status</div>
             </CardContent>
           </Card>
           
           <Card className="neon-border text-center">
             <CardContent className="pt-6">
-              <Play className="h-8 w-8 mx-auto mb-2 text-primary" />
-              <div className="text-2xl font-gaming font-bold" data-testid="stat-live-matches">
-                {matches?.filter((m: any) => m.status === "live").length || 0}
+              <Calendar className="h-8 w-8 mx-auto mb-2 text-primary" />
+              <div className="text-2xl font-gaming font-bold" data-testid="stat-start-date">
+                A Definir
               </div>
-              <div className="text-sm text-muted-foreground">Ao Vivo</div>
+              <div className="text-sm text-muted-foreground">Data de Início</div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Tournament Phases */}
+        {/* Tournament Status */}
+        <Card className="neon-border">
+          <CardHeader>
+            <CardTitle className="text-3xl font-gaming text-center">
+              <span className="gradient-text">COPA TOMATÃO</span>
+            </CardTitle>
+            <div className="text-center py-8">
+              <Trophy className="h-20 w-20 mx-auto text-primary mb-4" />
+              <h3 className="text-2xl font-semibold mb-2">
+                Campeonato em Breve
+              </h3>
+              <p className="text-muted-foreground text-lg">
+                A Copa Tomatão está prestes a começar! As partidas e o formato do torneio 
+                serão anunciados em breve. Fique ligado para mais informações.
+              </p>
+            </div>
+          </CardHeader>
+        </Card>
+
+        {/* Tournament Phases - Temporariamente removido */}
+        <div className="hidden">
         <Tabs defaultValue="quarterfinals" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="group" data-testid="tab-group">Grupos</TabsTrigger>
@@ -249,6 +269,69 @@ export default function Tournament() {
             </Card>
           </TabsContent>
         </Tabs>
+        </div>
+
+        {/* Confirmed Teams */}
+        <div className="mt-16">
+          <Card className="neon-border">
+            <CardHeader>
+              <CardTitle className="text-2xl font-gaming text-center">
+                <span className="gradient-text">TIMES</span> CONFIRMADOS
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Kongs do Atlântico */}
+                <div className="glass-card p-6 text-center glow-hover">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
+                    <Trophy className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Kongs do Atlântico</h3>
+                  <p className="text-sm text-gray-400 mb-3">5 jogadores confirmados</p>
+                  <div className="text-xs text-gray-500">
+                    Capitão: LDates
+                  </div>
+                </div>
+
+                {/* Os Fimos */}
+                <div className="glass-card p-6 text-center glow-hover">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-red-500 to-pink-500 rounded-full flex items-center justify-center">
+                    <Trophy className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Os Fimos</h3>
+                  <p className="text-sm text-gray-400 mb-3">5 jogadores confirmados</p>
+                  <div className="text-xs text-gray-500">
+                    Capitão: AZR Aldeath
+                  </div>
+                </div>
+
+                {/* Te Fizzguei */}
+                <div className="glass-card p-6 text-center glow-hover">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+                    <Trophy className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Te Fizzguei</h3>
+                  <p className="text-sm text-gray-400 mb-3">5 jogadores confirmados</p>
+                  <div className="text-xs text-gray-500">
+                    Capitão: A definir
+                  </div>
+                </div>
+
+                {/* Zeca e os Urubus */}
+                <div className="glass-card p-6 text-center glow-hover">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-violet-500 rounded-full flex items-center justify-center">
+                    <Trophy className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Zeca e os Urubus</h3>
+                  <p className="text-sm text-gray-400 mb-3">5 jogadores confirmados</p>
+                  <div className="text-xs text-gray-500">
+                    Capitão: Theushubu
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Tournament Schedule */}
         <div className="mt-16">
@@ -259,27 +342,15 @@ export default function Tournament() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="text-center" data-testid="schedule-groups">
-                  <Calendar className="h-8 w-8 mx-auto mb-2 text-primary" />
-                  <div className="font-semibold">Fase de Grupos</div>
-                  <div className="text-sm text-muted-foreground">15-22 Dezembro</div>
-                </div>
-                <div className="text-center" data-testid="schedule-quarters">
-                  <Calendar className="h-8 w-8 mx-auto mb-2 text-secondary" />
-                  <div className="font-semibold">Quartas de Final</div>
-                  <div className="text-sm text-muted-foreground">23-24 Dezembro</div>
-                </div>
-                <div className="text-center" data-testid="schedule-semis">
-                  <Calendar className="h-8 w-8 mx-auto mb-2 text-accent" />
-                  <div className="font-semibold">Semifinais</div>
-                  <div className="text-sm text-muted-foreground">26 Dezembro</div>
-                </div>
-                <div className="text-center" data-testid="schedule-final">
-                  <Trophy className="h-8 w-8 mx-auto mb-2 text-primary" />
-                  <div className="font-semibold">Grande Final</div>
-                  <div className="text-sm text-muted-foreground">28 Dezembro</div>
-                </div>
+              <div className="text-center py-12">
+                <Trophy className="h-16 w-16 mx-auto text-primary mb-4" />
+                <h3 className="text-xl font-semibold mb-2">
+                  Cronograma em Breve
+                </h3>
+                <p className="text-muted-foreground">
+                  O cronograma oficial da Copa Tomatão será anunciado em breve. 
+                  Fique ligado para mais informações sobre as datas e horários das partidas.
+                </p>
               </div>
             </CardContent>
           </Card>

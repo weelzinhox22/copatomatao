@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth, useLogout } from "@/lib/auth";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import logoImage from '@/assets/copa tomataão.png';
 
 export default function Navbar() {
   const [location] = useLocation();
@@ -15,8 +16,10 @@ export default function Navbar() {
     { href: "/tournament", label: "Campeonato" },
     { href: "/teams", label: "Times" },
     { href: "/players", label: "Jogadores" },
+    { href: "/draft", label: "Sorteio" },
     { href: "/watch", label: "Onde Assistir" },
     { href: "/rules", label: "Regras" },
+    { href: "/about", label: "Sobre" },
   ];
 
   const handleLogout = () => {
@@ -24,47 +27,48 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-card/80 backdrop-blur-md border-b border-border">
+    <nav className="fixed top-0 w-full z-50 glass-card border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-8">
-            <Link href="/" data-testid="link-home">
-              <h1 className="text-xl font-gaming font-bold gradient-text cursor-pointer">
-                LoL Championship
-              </h1>
+          <div className="flex items-center space-x-4 lg:space-x-8">
+            <Link href="/" data-testid="link-home" className="flex items-center">
+              <img 
+                src={logoImage} 
+                alt="Copa Tomatão" 
+                className="h-8 lg:h-10 w-auto cursor-pointer hover:scale-105 transition-transform duration-300"
+              />
             </Link>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-6">
+            <div className="hidden lg:block">
+              <div className="ml-6 flex items-baseline space-x-4 xl:space-x-6">
                 {navItems.map((item) => (
                   <Link 
                     key={item.href}
                     href={item.href}
+                    className={`px-2 xl:px-3 py-2 rounded-md text-xs xl:text-sm font-medium transition-all duration-300 hover:scale-105 whitespace-nowrap ${
+                      location === item.href 
+                        ? "text-white bg-primary/20 glow-hover" 
+                        : "text-gray-300 hover:text-primary hover:bg-white/5"
+                    }`}
                     data-testid={`link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                   >
-                    <a className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                      location === item.href 
-                        ? "text-foreground" 
-                        : "text-muted-foreground hover:text-primary"
-                    }`}>
-                      {item.label}
-                    </a>
+                    {item.label}
                   </Link>
                 ))}
               </div>
             </div>
           </div>
           
-          <div className="hidden md:block">
-            <div className="ml-4 flex items-center md:ml-6 space-x-3">
+          <div className="hidden lg:block">
+            <div className="ml-4 flex items-center space-x-2 xl:space-x-3">
               {!isLoading && (
                 user ? (
-                  <div className="flex items-center space-x-3">
-                    <span className="text-sm text-muted-foreground" data-testid="text-username">
+                  <div className="flex items-center space-x-2 xl:space-x-3">
+                    <span className="text-xs xl:text-sm text-muted-foreground whitespace-nowrap" data-testid="text-username">
                       Olá, {user.username}
                     </span>
                     {user.role === "admin" && (
                       <Link href="/admin" data-testid="link-admin">
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="text-xs">
                           Admin
                         </Button>
                       </Link>
@@ -73,6 +77,7 @@ export default function Navbar() {
                       onClick={handleLogout} 
                       variant="outline" 
                       size="sm"
+                      className="text-xs"
                       disabled={logout.isPending}
                       data-testid="button-logout"
                     >
@@ -82,12 +87,12 @@ export default function Navbar() {
                 ) : (
                   <>
                     <Link href="/login" data-testid="link-login">
-                      <Button className="neon-glow" data-testid="button-login">
+                      <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white glow-hover border-0 text-xs" data-testid="button-login">
                         Login
                       </Button>
                     </Link>
                     <Link href="/register" data-testid="link-register">
-                      <Button variant="outline" data-testid="button-register">
+                      <Button variant="outline" className="glass-card border-primary/30 text-white hover:bg-primary/20 glow-hover text-xs" data-testid="button-register">
                         Cadastrar
                       </Button>
                     </Link>
@@ -97,7 +102,7 @@ export default function Navbar() {
             </div>
           </div>
           
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <Button
               variant="ghost"
               size="sm"
@@ -111,24 +116,21 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 border-t border-border">
               {navItems.map((item) => (
                 <Link 
                   key={item.href}
                   href={item.href}
+                  className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                    location === item.href 
+                      ? "text-foreground bg-muted" 
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
                   data-testid={`link-mobile-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                 >
-                  <a 
-                    className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                      location === item.href 
-                        ? "text-foreground bg-muted" 
-                        : "text-muted-foreground hover:text-primary"
-                    }`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.label}
-                  </a>
+                  {item.label}
                 </Link>
               ))}
               
@@ -163,7 +165,7 @@ export default function Navbar() {
                   ) : (
                     <div className="space-y-2">
                       <Link href="/login" data-testid="link-mobile-login">
-                        <Button className="w-full neon-glow" onClick={() => setIsMenuOpen(false)}>
+                        <Button className="w-full minimal-hover" onClick={() => setIsMenuOpen(false)}>
                           Login
                         </Button>
                       </Link>

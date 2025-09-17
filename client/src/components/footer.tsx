@@ -13,11 +13,11 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-gaming font-bold gradient-text mb-4" data-testid="text-footer-title">
-              LoL Championship
+            <h3 className="text-xl font-heading font-bold brand-text mb-4" data-testid="text-footer-title">
+              Copa Tomatão
             </h3>
             <p className="text-muted-foreground text-sm mb-4" data-testid="text-footer-description">
-              O maior campeonato de League of Legends do Brasil. 
+              O campeonato de League of Legends da nossa comunidade. 
               Conectando jogadores e criando momentos épicos.
             </p>
             <div className="flex space-x-4">
@@ -39,24 +39,30 @@ export default function Footer() {
             <h4 className="font-semibold mb-4" data-testid="text-tournament-title">Campeonato</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/tournament" data-testid="link-bracket">
-                  <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-                    Chaveamento
-                  </a>
+                <Link 
+                  href="/tournament" 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  data-testid="link-bracket"
+                >
+                  Chaveamento
                 </Link>
               </li>
               <li>
-                <Link href="/tournament" data-testid="link-calendar">
-                  <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-                    Calendário
-                  </a>
+                <Link 
+                  href="/tournament" 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  data-testid="link-calendar"
+                >
+                  Calendário
                 </Link>
               </li>
               <li>
-                <Link href="/rules" data-testid="link-rules">
-                  <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-                    Regras
-                  </a>
+                <Link 
+                  href="/rules" 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  data-testid="link-rules"
+                >
+                  Regras
                 </Link>
               </li>
               <li>
@@ -71,17 +77,21 @@ export default function Footer() {
             <h4 className="font-semibold mb-4" data-testid="text-participants-title">Participantes</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/teams" data-testid="link-teams">
-                  <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-                    Times
-                  </a>
+                <Link 
+                  href="/teams" 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  data-testid="link-teams"
+                >
+                  Times
                 </Link>
               </li>
               <li>
-                <Link href="/players" data-testid="link-players">
-                  <a className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-                    Jogadores
-                  </a>
+                <Link 
+                  href="/players" 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  data-testid="link-players"
+                >
+                  Jogadores
                 </Link>
               </li>
               <li>
@@ -126,8 +136,8 @@ export default function Footer() {
         
         <div className="border-t border-border mt-8 pt-8 text-center">
           <p className="text-muted-foreground text-sm" data-testid="text-copyright">
-            © 2024 LoL Championship. Todos os direitos reservados. 
-            League of Legends é uma marca registrada da Riot Games, Inc.
+            © Copa Tomatão. Todos os direitos reservados. 
+            Campeonato da comunidade de League of Legends.
           </p>
         </div>
       </div>

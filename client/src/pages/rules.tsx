@@ -21,10 +21,10 @@ export default function Rules() {
       color: "text-primary",
       items: [
         "Cada time deve ter exatamente 5 jogadores titulares",
-        "É permitido 1 jogador substituto por time",
-        "Todos os jogadores devem ter elo mínimo de Ouro 4",
+        "É permitido 1 jogador substituto por time", 
         "Cada jogador pode participar de apenas um time",
-        "O capitão é responsável pela inscrição e gerenciamento do time"
+        "O capitão é responsável pela inscrição e gerenciamento do time",
+        "Diversão e fair play são os requisitos principais"
       ]
     },
     {
@@ -32,12 +32,11 @@ export default function Rules() {
       title: "Formato do Torneio",
       color: "text-secondary", 
       items: [
-        "Torneio eliminação simples com 64 times",
-        "Fase de grupos: Melhor de 1 (Bo1)",
-        "Quartas de final: Melhor de 3 (Bo3)",
-        "Semifinais: Melhor de 3 (Bo3)",
-        "Final: Melhor de 5 (Bo5)",
-        "Draft: Tournament Draft com bans alternados"
+        "Torneio eliminação simples com 4 times",
+        "Formato será definido conforme o número de participantes",
+        "Draft: Tournament Draft com bans alternados",
+        "Todas as partidas transmitidas ao vivo",
+        "Foco na diversão e fair play"
       ]
     },
     {
@@ -90,22 +89,17 @@ export default function Rules() {
     }
   ];
 
-  const prizes = [
-    { position: "1º Lugar", amount: "R$ 25.000", color: "text-yellow-500", bg: "bg-yellow-500/10" },
-    { position: "2º Lugar", amount: "R$ 15.000", color: "text-gray-400", bg: "bg-gray-400/10" },
-    { position: "3º Lugar", amount: "R$ 10.000", color: "text-amber-600", bg: "bg-amber-600/10" },
-  ];
 
   return (
     <div className="min-h-screen pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-gaming font-bold mb-4">
-            <span className="gradient-text">REGRAS</span> OFICIAIS
+          <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">
+            <span className="neon-text text-glow-soft">REGRAS</span> DA COPA
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Leia atentamente todas as regras antes de participar do campeonato
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Diretrizes simples para garantir que todos se divirtam na Copa Tomatão
           </p>
         </div>
 
@@ -159,36 +153,57 @@ export default function Rules() {
           })}
         </div>
 
-        {/* Prize Pool */}
+        {/* Tournament Spirit */}
         <div className="mb-12">
-          <Card className="neon-border">
+          <Card className="glass-card glow-soft">
             <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-gaming">
-                <span className="gradient-text">PREMIAÇÃO</span> TOTAL
+              <CardTitle className="text-3xl font-heading">
+                <span className="neon-text text-glow-soft">ESPÍRITO</span> DO CAMPEONATO
               </CardTitle>
-              <p className="text-muted-foreground">Distribuição dos prêmios do campeonato</p>
+              <p className="text-gray-300">A Copa Tomatão é sobre diversão e comunidade</p>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-3 gap-6">
-                {prizes.map((prize, index) => (
-                  <div 
-                    key={index} 
-                    className={`text-center p-6 rounded-lg ${prize.bg} border border-current/20`}
-                    data-testid={`prize-position-${index}`}
-                  >
-                    <Trophy className={`h-12 w-12 mx-auto mb-3 ${prize.color}`} />
-                    <div className={`text-2xl font-gaming font-bold mb-2 ${prize.color}`} data-testid={`prize-position-name-${index}`}>
-                      {prize.position}
-                    </div>
-                    <div className="text-3xl font-bold" data-testid={`prize-amount-${index}`}>
-                      {prize.amount}
-                    </div>
+                <div className="text-center p-6 glass-card rounded-lg">
+                  <Trophy className="h-12 w-12 mx-auto mb-3 text-yellow-400" />
+                  <div className="text-2xl font-heading font-bold mb-2 text-primary">
+                    1º Lugar
                   </div>
-                ))}
+                  <div className="text-lg font-medium text-white">
+                    Glória Eterna
+                  </div>
+                  <div className="text-sm text-gray-400 mt-2">
+                    Bragging rights para sempre
+                  </div>
+                </div>
+                <div className="text-center p-6 glass-card rounded-lg">
+                  <Users className="h-12 w-12 mx-auto mb-3 text-blue-400" />
+                  <div className="text-2xl font-heading font-bold mb-2 text-secondary">
+                    Todos
+                  </div>
+                  <div className="text-lg font-medium text-white">
+                    Diversão Garantida
+                  </div>
+                  <div className="text-sm text-gray-400 mt-2">
+                    Resenha entre amigos
+                  </div>
+                </div>
+                <div className="text-center p-6 glass-card rounded-lg">
+                  <Shield className="h-12 w-12 mx-auto mb-3 text-green-400" />
+                  <div className="text-2xl font-heading font-bold mb-2 text-accent">
+                    Comunidade
+                  </div>
+                  <div className="text-lg font-medium text-white">
+                    Novas Amizades
+                  </div>
+                  <div className="text-sm text-gray-400 mt-2">
+                    Conexões que ficam
+                  </div>
+                </div>
               </div>
               <div className="text-center mt-6">
-                <Badge variant="secondary" className="text-lg px-4 py-2" data-testid="text-total-prize">
-                  Premiação Total: R$ 50.000
+                <Badge variant="secondary" className="text-lg px-4 py-2 glass-card" data-testid="text-tournament-motto">
+                  "O prêmio é a diversão em si!"
                 </Badge>
               </div>
             </CardContent>
