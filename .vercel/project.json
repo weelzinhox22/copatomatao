@@ -1,0 +1,9 @@
+{
+  "orgId": "copa-tomatao",
+  "projectId": "copa-tomatao",
+  "settings": {
+    "buildCommand": "npm run vercel:build",
+    "outputDirectory": "dist/public",
+    "installCommand": "npm install"
+  }
+}
