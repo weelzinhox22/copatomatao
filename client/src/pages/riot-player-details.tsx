@@ -8,12 +8,78 @@ import { Link } from "wouter";
 import { useRiotPlayer, useRiotMatchesExpanded, formatRank, getChampionImageUrl, getProfileIconUrl, getRankImageUrl, formatGameDuration } from "@/hooks/useRiotAPI";
 import AdvancedMatchHistory from "@/components/advanced-match-history";
 
+// Jogadores oficiais do campeonato Copa Tomatão
+const officialPlayers = [
+  {
+    gameName: "welziinho",
+    tagLine: "wel",
+    lane: "MID/JUNGLE",
+    team: "Indefinido",
+    description: "Mid laner e jungler versátil com excelente controle de wave, roaming e timing de ganks. Conhecido por sua adaptabilidade entre as duas posições."
+  },
+  {
+    gameName: "LDates",
+    tagLine: "BR1", 
+    lane: "JUNGLE",
+    team: "Kongs do Atlântico",
+    description: "Jungler experiente com excelente controle de objetivos e timing de ganks. Conhecido por suas decisões estratégicas em momentos cruciais."
+  },
+  {
+    gameName: "Beiço Reformed",
+    tagLine: "Cold",
+    lane: "ADC",
+    team: "Indefinido", 
+    description: "ADC preciso com excelente posicionamento em teamfights e farm consistente. Conhecido por sua capacidade de carry em late game."
+  },
+  {
+    gameName: "AZR Aldeath",
+    tagLine: "mond",
+    lane: "MID/TOP",
+    team: "Os Fimos",
+    description: "Mid laner e top laner versátil com excelente controle de lane e versatilidade de campeões. Conhecido por sua adaptabilidade entre as duas posições."
+  },
+  {
+    gameName: "guizão rapidão",
+    tagLine: "teco",
+    lane: "SUPPORT",
+    team: "Indefinido",
+    description: "Support versátil conhecido por suas jogadas criativas e excelente visão de jogo. Conhecido por suas jogadas inovadoras."
+  },
+  {
+    gameName: "SOU A GUILHOTINA",
+    tagLine: "00000",
+    lane: "TOP",
+    team: "Indefinido",
+    description: "Top laner dominante com estilo de jogo agressivo e excelente controle de wave. Conhecido por suas jogadas ousadas e carry potential."
+  },
+  {
+    gameName: "BLT Reformed",
+    tagLine: "BLT",
+    lane: "JUNGLE/SUPPORT",
+    team: "Indefinido",
+    description: "Jungler e support versátil com grande versatilidade de campeões e excelente controle de objetivos. Conhecido por sua adaptabilidade."
+  },
+  {
+    gameName: "Theushubu",
+    tagLine: "ZoioO",
+    lane: "TOP/JUNGLE",
+    team: "Zeca e os Urubus",
+    description: "Top laner e jungler versátil com excelente farm, posicionamento e timing de ganks. Conhecido por sua versatilidade entre as duas posições."
+  }
+];
+
 export default function RiotPlayerDetails() {
   const [, params] = useRoute("/riot-player/:gameName/:tagLine");
   const gameName = params?.gameName ? decodeURIComponent(params.gameName) : "";
   const tagLine = params?.tagLine ? decodeURIComponent(params.tagLine) : "";
   
   const [activeTab, setActiveTab] = useState<'championship' | 'ranked'>('championship');
+
+  // Buscar dados do jogador na lista oficial
+  const officialPlayerData = officialPlayers.find(
+    player => player.gameName.toLowerCase() === gameName.toLowerCase() && 
+    player.tagLine.toLowerCase() === tagLine.toLowerCase()
+  );
 
   const { data: playerData, isLoading, error, refetch: refetchPlayer } = useRiotPlayer(gameName, tagLine);
   const { data: matchHistory, isLoading: matchesLoading, refetch: refetchMatches } = useRiotMatchesExpanded(
@@ -73,18 +139,193 @@ export default function RiotPlayerDetails() {
 
   if (error) {
     return (
-      <div className="min-h-screen pt-16 bg-background flex items-center justify-center">
-        <div className="text-center max-w-md">
-          <h2 className="text-2xl font-bold text-red-400 mb-4">Erro ao Carregar</h2>
-          <p className="text-gray-300 mb-6">
-            {error instanceof Error ? error.message : "Não foi possível carregar os dados do jogador."}
-          </p>
-          <Link href="/players">
-            <Button variant="outline">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar aos Jogadores
-            </Button>
-          </Link>
+      <div className="min-h-screen pt-16 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <Link href="/players">
+                <Button variant="ghost">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Voltar aos Jogadores
+                </Button>
+              </Link>
+              <div className="flex items-center gap-2 text-orange-400">
+                <RefreshCw className="w-4 h-4" />
+                <span className="text-sm">API Offline</span>
+              </div>
+            </div>
+
+            {/* Player Header Card - Modo Offline */}
+            <div className="glass-card p-8 rounded-xl glow-soft border border-orange-500/30">
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-center gap-6">
+                  <div className="relative">
+                    <div className="w-24 h-24 bg-gradient-to-br from-orange-500 to-red-500 rounded-full border-4 border-orange-400 glow-soft flex items-center justify-center">
+                      <span className="text-3xl font-bold text-white">
+                        {gameName.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="absolute -bottom-2 -right-2 bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+                      ?
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h1 className="text-4xl font-heading font-bold text-white mb-2">
+                      <span className="neon-text text-glow-soft">{gameName}</span>
+                      <span className="text-gray-400">#{tagLine}</span>
+                    </h1>
+                    <p className="text-xl text-gray-300 mb-4">
+                      {officialPlayerData ? `${officialPlayerData.team} • ${officialPlayerData.lane}` : 'Jogador da Copa Tomatão'}
+                    </p>
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                        <Trophy className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-yellow-400 font-bold text-lg">
+                          Copa Tomatão
+                        </div>
+                        <div className="text-gray-400 text-sm">
+                          {officialPlayerData ? 'Participante Oficial' : 'Jogador Cadastrado'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status da API */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="glass-card p-4 rounded-lg text-center border border-orange-500/30">
+                  <div className="text-2xl font-bold text-orange-400">Offline</div>
+                  <div className="text-sm text-gray-400">API da Riot</div>
+                </div>
+                <div className="glass-card p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-primary">-</div>
+                  <div className="text-sm text-gray-400">KDA Médio</div>
+                </div>
+                <div className="glass-card p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-secondary">-</div>
+                  <div className="text-sm text-gray-400">Partidas Recentes</div>
+                </div>
+                <div className="glass-card p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-accent">-</div>
+                  <div className="text-sm text-gray-400">League Points</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Copa Tomatão Section - Modo Offline */}
+          <div className="mt-8">
+            <Card className="glass-card glow-hover border-2 border-yellow-400/30">
+              <CardHeader className="bg-gradient-to-r from-yellow-400/20 to-orange-500/20 rounded-t-xl">
+                <CardTitle className="text-3xl font-heading neon-text flex items-center gap-3 text-center justify-center">
+                  <Trophy className="h-8 w-8 text-yellow-400" />
+                  <span className="text-glow-medium">COPA TOMATÃO</span>
+                  <Trophy className="h-8 w-8 text-yellow-400" />
+                </CardTitle>
+                <p className="text-center text-gray-300 text-lg">
+                  Jogador Oficial do Campeonato
+                </p>
+              </CardHeader>
+              <CardContent className="p-8">
+                <div className="space-y-6">
+                  {/* Championship Stats - Modo Offline */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                    <div className="text-center glass-card p-6 rounded-xl border border-yellow-400/30">
+                      <div className="text-4xl font-bold text-yellow-400 mb-2">
+                        -
+                      </div>
+                      <div className="text-lg text-gray-300 font-semibold">Partidas</div>
+                      <div className="text-sm text-gray-400">no Campeonato</div>
+                    </div>
+                    <div className="text-center glass-card p-6 rounded-xl border border-green-400/30">
+                      <div className="text-4xl font-bold text-green-400 mb-2">
+                        -
+                      </div>
+                      <div className="text-lg text-gray-300 font-semibold">Win Rate</div>
+                      <div className="text-sm text-gray-400">Copa Tomatão</div>
+                    </div>
+                    <div className="text-center glass-card p-6 rounded-xl border border-blue-400/30">
+                      <div className="text-4xl font-bold text-blue-400 mb-2">
+                        -
+                      </div>
+                      <div className="text-lg text-gray-300 font-semibold">Kills</div>
+                      <div className="text-sm text-gray-400">Total</div>
+                    </div>
+                    <div className="text-center glass-card p-6 rounded-xl border border-purple-400/30">
+                      <div className="text-4xl font-bold text-purple-400 mb-2">
+                        -
+                      </div>
+                      <div className="text-lg text-gray-300 font-semibold">Assists</div>
+                      <div className="text-sm text-gray-400">Total</div>
+                    </div>
+                  </div>
+
+                  {/* Informações do Jogador */}
+                  <div className="glass-card p-8 rounded-xl border border-yellow-400/20 hover:border-yellow-400/40 transition-all duration-300 text-center">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                        <Trophy className="w-8 h-8 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-white mb-2">{gameName}#{tagLine}</div>
+                        <div className="text-lg text-gray-300 mb-2">
+                          {officialPlayerData ? 'Jogador Oficial da Copa Tomatão' : 'Jogador Cadastrado'}
+                        </div>
+                        <div className="text-sm text-gray-400">Dados da API indisponíveis no momento</div>
+                      </div>
+                      <div className="mt-4">
+                        <div className="text-lg text-yellow-400 font-bold">API Offline</div>
+                        <div className="text-sm text-gray-400">Os dados serão carregados quando a API estiver disponível</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Informações Específicas do Jogador */}
+                  {officialPlayerData && (
+                    <div className="glass-card p-6 rounded-xl border border-blue-400/30 bg-gradient-to-r from-blue-400/10 to-purple-500/10">
+                      <div className="flex items-start gap-4">
+                        <div className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                          <Star className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                          <h5 className="text-xl font-bold text-white mb-2">Informações do Jogador</h5>
+                          <div className="space-y-2 text-gray-300">
+                            <p><span className="font-semibold text-blue-400">Posição:</span> {officialPlayerData.lane}</p>
+                            <p><span className="font-semibold text-green-400">Time:</span> {officialPlayerData.team}</p>
+                            <p className="text-lg leading-relaxed mt-4">{officialPlayerData.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Informações sobre o Campeonato */}
+                  <div className="mt-8 p-6 glass-card rounded-xl border border-yellow-400/30 bg-gradient-to-r from-yellow-400/10 to-orange-500/10">
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <Star className="w-4 h-4 text-black" />
+                      </div>
+                      <div>
+                        <h5 className="text-xl font-bold text-white mb-2">Sobre o Jogador</h5>
+                        <p className="text-gray-300 text-lg leading-relaxed">
+                          Este jogador é um participante oficial da Copa Tomatão. Quando a API da Riot Games 
+                          estiver disponível, você poderá ver suas estatísticas detalhadas, histórico de partidas 
+                          ranqueadas e informações completas do perfil. Por enquanto, você pode acompanhar 
+                          seu desempenho através das partidas oficiais do campeonato.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     );

@@ -142,7 +142,7 @@ export default function RiotPlayerCard() {
                 <Trophy className="w-6 h-6 text-white" />
               </div>
               <div className="text-2xl font-bold text-white neon-text">
-                {playerData.recentStats.winRate}
+                {playerData.recentStats?.winRate || "0%"}
               </div>
               <div className="text-gray-400 text-sm">Taxa de Vitória</div>
             </div>
@@ -152,7 +152,7 @@ export default function RiotPlayerCard() {
                 <Target className="w-6 h-6 text-white" />
               </div>
               <div className="text-2xl font-bold text-white neon-text">
-                {playerData.recentStats.kda}
+                {playerData.recentStats?.kda || "0.00"}
               </div>
               <div className="text-gray-400 text-sm">KDA Médio</div>
             </div>
@@ -162,7 +162,7 @@ export default function RiotPlayerCard() {
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <div className="text-2xl font-bold text-white neon-text">
-                {playerData.recentStats.totalGames}
+                {playerData.recentStats?.totalGames || 0}
               </div>
               <div className="text-gray-400 text-sm">Partidas Recentes</div>
             </div>

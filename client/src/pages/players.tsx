@@ -1,9 +1,10 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { User, Search, ExternalLink, Trophy } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
 import AnimatedInfographic from "@/components/animated-infographic";
-import RiotPlayerCard from "@/components/riot-player-card";
+// import RiotPlayerCard from "@/components/riot-player-card";
 import { useRiotPlayer } from "@/hooks/useRiotAPI";
 
 
@@ -92,19 +93,28 @@ function OfficialPlayerCard({ player }: { player: typeof officialPlayers[0] }) {
 
   if (error) {
     return (
-      <div className="glass-card p-4 rounded-xl glow-hover border border-red-500/30">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
-            <User className="w-6 h-6 text-gray-400" />
+      <Link href={`/riot-player/${player.gameName}/${player.tagLine}`}>
+        <div className="glass-card p-4 rounded-xl glow-hover hover:glow-medium transition-all duration-300 group cursor-pointer border border-orange-500/30">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+              <span className="text-lg font-bold text-white">
+                {player.gameName.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-white truncate">{player.gameName}#{player.tagLine}</h3>
+              <p className="text-gray-400 text-sm">{player.team} • {player.lane}</p>
+            </div>
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+              <ExternalLink className="w-4 h-4 text-white" />
+            </div>
           </div>
-          <div className="flex-1">
-            <h3 className="text-lg font-bold text-white">{player.gameName}#{player.tagLine}</h3>
-            <p className="text-gray-400 text-sm">{player.team} • {player.lane}</p>
+          <p className="text-gray-300 text-sm mb-2 line-clamp-2">{player.description}</p>
+          <div className="pt-3 border-t border-white/10">
+            <p className="text-center text-orange-400 text-xs">API offline - Clique para ver detalhes</p>
           </div>
         </div>
-        <p className="text-gray-300 text-sm mb-2">{player.description}</p>
-        <p className="text-red-400 text-xs">Erro ao carregar dados</p>
-      </div>
+      </Link>
     );
   }
 
@@ -194,10 +204,9 @@ export default function Players() {
 
         {/* Busca de Jogadores */}
         <div className="mb-12">
-          <RiotPlayerCard />
+          {/* Componente de busca temporariamente removido */}
         </div>
 
-        {/* Jogadores Oficiais do Campeonato */}
         <div className="mb-16">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-heading font-bold text-white neon-text mb-4 flex items-center justify-center gap-3">
@@ -207,7 +216,7 @@ export default function Players() {
             <p className="text-gray-300 max-w-2xl mx-auto mb-8">
               Os jogadores oficiais do campeonato com dados atualizados da API da Riot Games
             </p>
-        </div>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
             {officialPlayers.map((player, index) => (

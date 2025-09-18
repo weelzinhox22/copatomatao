@@ -19,5 +19,16 @@
   ],
   "installCommand": "npm install",
   "buildCommand": "npm run vercel:build",
-  "outputDirectory": "dist/public"
+  "outputDirectory": "dist/public",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
 }
