@@ -21,6 +21,36 @@ export default function RiotPlayerDetails() {
     20
   );
 
+  // Processar dados da API
+  const soloQueueEntry = playerData?.leagueEntries?.find(entry => entry.queueType === 'RANKED_SOLO_5x5');
+  const rank = soloQueueEntry ? {
+    tier: soloQueueEntry.tier,
+    rank: soloQueueEntry.rank,
+    leaguePoints: soloQueueEntry.leaguePoints,
+    wins: soloQueueEntry.wins,
+    losses: soloQueueEntry.losses
+  } : null;
+  
+  const recentStats = playerData?.recentMatches?.length ? {
+    totalGames: playerData.recentMatches.length,
+    wins: playerData.recentMatches.filter((match: any) => match.info?.participants?.find((p: any) => p.puuid === playerData.account.puuid)?.win).length,
+    kills: 0, // Será calculado das partidas
+    deaths: 0, // Será calculado das partidas
+    assists: 0, // Será calculado das partidas
+    kda: "0.00",
+    winRate: playerData.recentMatches.length > 0 ? 
+      `${Math.round((playerData.recentMatches.filter((match: any) => match.info?.participants?.find((p: any) => p.puuid === playerData.account.puuid)?.win).length / playerData.recentMatches.length) * 100)}%` : 
+      "0%"
+  } : {
+    totalGames: 0,
+    wins: 0,
+    kills: 0,
+    deaths: 0,
+    assists: 0,
+    kda: "0.00",
+    winRate: "0%"
+  };
+
   const handleRefresh = async () => {
     // Force refresh by invalidating cache
     await Promise.all([
@@ -123,19 +153,19 @@ export default function RiotPlayerDetails() {
                     Level {playerData.summoner.summonerLevel}
                   </p>
                   
-                  {playerData.rank && (
+                  {rank && (
                     <div className="flex items-center gap-3">
                       <img
-                        src={getRankImageUrl(playerData.rank.tier)}
-                        alt={playerData.rank.tier}
+                        src={getRankImageUrl(rank.tier)}
+                        alt={rank.tier}
                         className="w-12 h-12"
                       />
                       <div>
                         <div className="text-yellow-400 font-bold text-lg">
-                          {formatRank(playerData.rank)}
+                          {formatRank(rank)}
                         </div>
                         <div className="text-gray-400 text-sm">
-                          {playerData.rank.wins}V / {playerData.rank.losses}D
+                          {rank.wins}V / {rank.losses}D
                         </div>
                       </div>
                     </div>
@@ -147,20 +177,20 @@ export default function RiotPlayerDetails() {
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="glass-card p-4 rounded-lg text-center">
-                <div className="text-2xl font-bold text-green-400">{playerData.recentStats.winRate}</div>
+                <div className="text-2xl font-bold text-green-400">{recentStats.winRate}</div>
                 <div className="text-sm text-gray-400">Taxa de Vitória</div>
               </div>
               <div className="glass-card p-4 rounded-lg text-center">
-                <div className="text-2xl font-bold text-primary">{playerData.recentStats.kda}</div>
+                <div className="text-2xl font-bold text-primary">{recentStats.kda}</div>
                 <div className="text-sm text-gray-400">KDA Médio</div>
               </div>
               <div className="glass-card p-4 rounded-lg text-center">
-                <div className="text-2xl font-bold text-secondary">{playerData.recentStats.totalGames}</div>
+                <div className="text-2xl font-bold text-secondary">{recentStats.totalGames}</div>
                 <div className="text-sm text-gray-400">Partidas Recentes</div>
               </div>
               <div className="glass-card p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-accent">
-                  {playerData.rank ? playerData.rank.leaguePoints : 0}
+                  {rank ? rank.leaguePoints : 0}
                 </div>
                 <div className="text-sm text-gray-400">League Points</div>
               </div>
@@ -363,23 +393,23 @@ export default function RiotPlayerDetails() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {playerData.rank ? (
+                {rank ? (
                   <div className="space-y-4">
                     <div className="flex items-center gap-4">
                       <img
-                        src={getRankImageUrl(playerData.rank.tier)}
-                        alt={playerData.rank.tier}
+                        src={getRankImageUrl(rank.tier)}
+                        alt={rank.tier}
                         className="w-16 h-16"
                       />
                       <div>
                         <div className="text-yellow-400 font-bold text-xl">
-                          {formatRank(playerData.rank)}
+                          {formatRank(rank)}
                         </div>
                         <div className="text-gray-400">
-                          {playerData.rank.wins}V / {playerData.rank.losses}D
+                          {rank.wins}V / {rank.losses}D
                         </div>
                         <div className="text-sm text-gray-500">
-                          {playerData.rank.leaguePoints} LP
+                          {rank.leaguePoints} LP
                         </div>
                       </div>
                     </div>
@@ -391,7 +421,6 @@ export default function RiotPlayerDetails() {
                 )}
               </CardContent>
             </Card>
-
 
             {/* General Stats */}
             <Card className="glass-card glow-hover">
@@ -406,26 +435,26 @@ export default function RiotPlayerDetails() {
                   <div className="flex justify-between">
                     <span className="text-gray-400">KDA Médio:</span>
                     <span className="text-primary font-semibold">
-                      {playerData.recentStats.kda}
+                      {recentStats.kda}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Taxa de Vitória:</span>
                     <span className="text-green-400 font-semibold">
-                      {playerData.recentStats.winRate}
+                      {recentStats.winRate}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Partidas Analisadas:</span>
                     <span className="text-white font-semibold">
-                      {playerData.recentStats.totalGames}
+                      {recentStats.totalGames}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Kills Médias:</span>
                     <span className="text-white font-semibold">
-                      {playerData.recentStats.totalGames > 0 
-                        ? (playerData.recentStats.kills / playerData.recentStats.totalGames).toFixed(1)
+                      {recentStats.totalGames > 0 
+                        ? (recentStats.kills / recentStats.totalGames).toFixed(1)
                         : "0"
                       }
                     </span>

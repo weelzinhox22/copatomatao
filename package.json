@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env DATABASE_URL=\"postgresql://username:password@ep-example-123456.us-east-1.aws.neon.tech/neondb\" NODE_ENV=development tsx server/index.ts",
+    "dev": "cross-env DATABASE_URL=\"postgresql://username:password@ep-example-123456.us-east-1.aws.neon.tech/neondb\" NODE_ENV=development RIOT_API_KEY=\"RGAPI-0a987b67-6e29-48a5-85c9-db2c86b762c7\" tsx server/index.ts",
     "build": "npm run build:client && npm run build:server",
     "build:client": "npx vite build",
     "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",

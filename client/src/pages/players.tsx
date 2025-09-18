@@ -7,7 +7,7 @@ import RiotPlayerCard from "@/components/riot-player-card";
 import { useRiotPlayer } from "@/hooks/useRiotAPI";
 
 
-// Jogadores oficiais do campeonato Copa Tomatão
+// Jogadores oficiais do campeonato Copa Tomatão (apenas os que existem)
 const officialPlayers = [
   {
     gameName: "welziinho",
@@ -64,83 +64,6 @@ const officialPlayers = [
     lane: "TOP/JUNGLE",
     team: "Zeca e os Urubus",
     description: "Top laner e jungler versátil com excelente farm, posicionamento e timing de ganks. Conhecido por sua versatilidade entre as duas posições."
-  },
-  {
-    gameName: "ShadowStrike",
-    tagLine: "BR1",
-    lane: "JUNGLE",
-    team: "Indefinido",
-    description: "Jungler agressivo com excelente timing de ganks"
-  },
-  {
-    gameName: "MidKing",
-    tagLine: "BR1",
-    lane: "MID",
-    team: "Indefinido",
-    description: "Mid laner dominante com pool de campeões diversificada"
-  },
-  {
-    gameName: "SupportPro",
-    tagLine: "BR1",
-    lane: "SUPPORT",
-    team: "Indefinido",
-    description: "Support estratégico com excelente visão de jogo"
-  },
-  {
-    gameName: "TopDestroyer",
-    tagLine: "BR1",
-    lane: "TOP",
-    team: "Indefinido",
-    description: "Top laner tank com excelente controle de teamfight"
-  },
-  {
-    gameName: "ADCPro",
-    tagLine: "BR1",
-    lane: "ADC",
-    team: "Indefinido",
-    description: "ADC preciso com excelente kiting e posicionamento"
-  },
-  {
-    gameName: "JungleKing",
-    tagLine: "BR1",
-    lane: "JUNGLE",
-    team: "Indefinido",
-    description: "Jungler estratégico com controle total de objetivos"
-  },
-  {
-    gameName: "MidMaster",
-    tagLine: "BR1",
-    lane: "MID",
-    team: "Indefinido",
-    description: "Mid laner técnico com excelente roaming"
-  },
-  {
-    gameName: "SupportKing",
-    tagLine: "BR1",
-    lane: "SUPPORT",
-    team: "Indefinido",
-    description: "Support versátil com excelente proteção de carry"
-  },
-  {
-    gameName: "TopLegend",
-    tagLine: "BR1",
-    lane: "TOP",
-    team: "Indefinido",
-    description: "Top laner experiente com excelente macro game"
-  },
-  {
-    gameName: "ADCMaster",
-    tagLine: "BR1",
-    lane: "ADC",
-    team: "Indefinido",
-    description: "ADC técnico com excelente farm e teamfight"
-  },
-  {
-    gameName: "JunglePro",
-    tagLine: "BR1",
-    lane: "JUNGLE",
-    team: "Indefinido",
-    description: "Jungler versátil com excelente controle de mapa"
   }
 ];
 
@@ -185,8 +108,27 @@ function OfficialPlayerCard({ player }: { player: typeof officialPlayers[0] }) {
     );
   }
 
-  const rank = playerData?.rank;
-  const recentStats = playerData?.recentStats;
+  // Processar dados da API
+  const soloQueueEntry = playerData?.leagueEntries?.find(entry => entry.queueType === 'RANKED_SOLO_5x5');
+  const rank = soloQueueEntry ? {
+    tier: soloQueueEntry.tier,
+    rank: soloQueueEntry.rank,
+    leaguePoints: soloQueueEntry.leaguePoints,
+    wins: soloQueueEntry.wins,
+    losses: soloQueueEntry.losses
+  } : null;
+  
+  const recentStats = playerData?.recentMatches?.length ? {
+    totalGames: playerData.recentMatches.length,
+    wins: playerData.recentMatches.filter((match: any) => match.info?.participants?.find((p: any) => p.puuid === playerData.account.puuid)?.win).length,
+    kills: 0, // Será calculado das partidas
+    deaths: 0, // Será calculado das partidas
+    assists: 0, // Será calculado das partidas
+    kda: "0.00",
+    winRate: playerData.recentMatches.length > 0 ? 
+      `${Math.round((playerData.recentMatches.filter((match: any) => match.info?.participants?.find((p: any) => p.puuid === playerData.account.puuid)?.win).length / playerData.recentMatches.length) * 100)}%` : 
+      "0%"
+  } : null;
 
   return (
     <Link href={`/riot-player/${player.gameName}/${player.tagLine}`}>
@@ -253,7 +195,7 @@ export default function Players() {
         {/* Busca de Jogadores */}
         <div className="mb-12">
           <RiotPlayerCard />
-                    </div>
+        </div>
 
         {/* Jogadores Oficiais do Campeonato */}
         <div className="mb-16">
@@ -280,7 +222,7 @@ export default function Players() {
         </div>
 
         {/* Call to Action */}
-        {user?.role !== "player" && (
+        {user && (user as any)?.role !== "player" && (
           <div className="mt-16 text-center">
             <div className="glass-card max-w-2xl mx-auto p-8 rounded-xl glow-hover">
               <h3 className="text-2xl font-heading font-bold mb-4 neon-text" data-testid="text-join-players-title">

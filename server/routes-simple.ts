@@ -158,8 +158,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`[RENDER] Environment check - RIOT_API_KEY exists: ${!!process.env.RIOT_API_KEY}`);
       console.log(`[RENDER] Environment check - NODE_ENV: ${process.env.NODE_ENV}`);
       
-      // Se a API key não estiver configurada ou estiver dando erro 401, usar mock data
-      if (!process.env.RIOT_API_KEY || process.env.RIOT_API_KEY === 'RGAPI-0a987b67-6e29-48a5-85c9-db2c86b72c7') {
+      // Se a API key não estiver configurada, usar mock data
+      if (!process.env.RIOT_API_KEY) {
         console.log(`[RENDER] Using mock data for ${gameName}#${tagLine} due to API key issues`);
         
         const mockPlayerData = {

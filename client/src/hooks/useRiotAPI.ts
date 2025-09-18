@@ -11,19 +11,31 @@ interface RiotPlayerData {
     summonerLevel: number;
     profileIconId: number;
   };
-  rank: {
+  leagueEntries: Array<{
+    leagueId: string;
+    queueType: string;
+    tier: string;
+    rank: string;
+    leaguePoints: number;
+    wins: number;
+    losses: number;
+  }>;
+  championMasteries: Array<{
+    championId: number;
+    championLevel: number;
+    championPoints: number;
+    championName?: string;
+  }>;
+  recentMatches: Array<any>;
+  // Computed fields for compatibility
+  rank?: {
     tier: string;
     rank: string;
     leaguePoints: number;
     wins: number;
     losses: number;
   } | null;
-  championMasteries: Array<{
-    championId: number;
-    championLevel: number;
-    championPoints: number;
-  }>;
-  recentStats: {
+  recentStats?: {
     totalGames: number;
     wins: number;
     kills: number;
