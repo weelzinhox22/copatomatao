@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Play, Calendar } from "lucide-react";
+import { Play, Calendar, Trophy } from "lucide-react";
+import { Link } from "wouter";
 import bgVideo from "../assets/bghome.mp4";
 import CountdownTimer from "./countdown-timer";
 
@@ -47,15 +48,26 @@ export default function HeroSection() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{animationDelay: "0.4s"}}>
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  className="px-8 py-4 text-lg font-semibold text-white hero-button-secondary"
-                  data-testid="button-watch-live"
-                >
-                  <Play className="mr-2 h-5 w-5" />
-                  Assistir Transmissões
-                </Button>
+                <Link href="/watch">
+                  <Button 
+                    variant="outline" 
+                    size="lg"
+                    className="px-8 py-4 text-lg font-semibold text-white hero-button-secondary"
+                    data-testid="button-watch-live"
+                  >
+                    <Play className="mr-2 h-5 w-5" />
+                    Assistir Transmissões
+                  </Button>
+                </Link>
+                <Link href="/hall-of-fame">
+                  <Button 
+                    size="lg"
+                    className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white glow-hover border-0"
+                  >
+                    <Trophy className="mr-2 h-5 w-5" />
+                    Hall dos Vencedores
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

@@ -3,6 +3,7 @@ import TournamentStatus from "@/components/tournament-status";
 import FeaturedTeams from "@/components/featured-teams";
 import LiveStreaming from "@/components/live-streaming";
 import LatestNews from "@/components/latest-news";
+import ShareFeaturePopup from "@/components/share-feature-popup";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <FeaturedTeams />
       <LiveStreaming />
       <LatestNews />
+      <ShareFeaturePopup />
     </>
   );
 }

@@ -14,6 +14,7 @@ export default function Navbar() {
   const navItems = [
     { href: "/", label: "Início" },
     { href: "/tournament", label: "Campeonato" },
+    { href: "/hall-of-fame", label: "Hall dos Vencedores" },
     { href: "/teams", label: "Times" },
     { href: "/players", label: "Jogadores" },
     { href: "/draft", label: "Sorteio" },
@@ -60,44 +61,29 @@ export default function Navbar() {
           
           <div className="hidden lg:block">
             <div className="ml-4 flex items-center space-x-2 xl:space-x-3">
-              {!isLoading && (
-                user ? (
-                  <div className="flex items-center space-x-2 xl:space-x-3">
-                    <span className="text-xs xl:text-sm text-muted-foreground whitespace-nowrap" data-testid="text-username">
-                      Olá, {user.username}
-                    </span>
-                    {user.role === "admin" && (
-                      <Link href="/admin" data-testid="link-admin">
-                        <Button variant="outline" size="sm" className="text-xs">
-                          Admin
-                        </Button>
-                      </Link>
-                    )}
-                    <Button 
-                      onClick={handleLogout} 
-                      variant="outline" 
-                      size="sm"
-                      className="text-xs"
-                      disabled={logout.isPending}
-                      data-testid="button-logout"
-                    >
-                      Sair
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <Link href="/login" data-testid="link-login">
-                      <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white glow-hover border-0 text-xs" data-testid="button-login">
-                        Login
+              {!isLoading && user && (
+                <div className="flex items-center space-x-2 xl:space-x-3">
+                  <span className="text-xs xl:text-sm text-muted-foreground whitespace-nowrap" data-testid="text-username">
+                    Olá, {user.username}
+                  </span>
+                  {user.role === "admin" && (
+                    <Link href="/admin" data-testid="link-admin">
+                      <Button variant="outline" size="sm" className="text-xs">
+                        Admin
                       </Button>
                     </Link>
-                    <Link href="/register" data-testid="link-register">
-                      <Button variant="outline" className="glass-card border-primary/30 text-white hover:bg-primary/20 glow-hover text-xs" data-testid="button-register">
-                        Cadastrar
-                      </Button>
-                    </Link>
-                  </>
-                )
+                  )}
+                  <Button 
+                    onClick={handleLogout} 
+                    variant="outline" 
+                    size="sm"
+                    className="text-xs"
+                    disabled={logout.isPending}
+                    data-testid="button-logout"
+                  >
+                    Sair
+                  </Button>
+                </div>
               )}
             </div>
           </div>
@@ -134,48 +120,33 @@ export default function Navbar() {
                 </Link>
               ))}
               
-              {!isLoading && (
+              {!isLoading && user && (
                 <div className="pt-3 border-t border-border">
-                  {user ? (
-                    <div className="space-y-2">
-                      <div className="px-3 py-2 text-sm text-muted-foreground" data-testid="text-mobile-username">
-                        Olá, {user.username}
-                      </div>
-                      {user.role === "admin" && (
-                        <Link href="/admin" data-testid="link-mobile-admin">
-                          <Button variant="outline" className="w-full" size="sm">
-                            Admin
-                          </Button>
-                        </Link>
-                      )}
-                      <Button 
-                        onClick={() => {
-                          handleLogout();
-                          setIsMenuOpen(false);
-                        }}
-                        variant="outline" 
-                        className="w-full"
-                        size="sm"
-                        disabled={logout.isPending}
-                        data-testid="button-mobile-logout"
-                      >
-                        Sair
-                      </Button>
+                  <div className="space-y-2">
+                    <div className="px-3 py-2 text-sm text-muted-foreground" data-testid="text-mobile-username">
+                      Olá, {user.username}
                     </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <Link href="/login" data-testid="link-mobile-login">
-                        <Button className="w-full minimal-hover" onClick={() => setIsMenuOpen(false)}>
-                          Login
+                    {user.role === "admin" && (
+                      <Link href="/admin" data-testid="link-mobile-admin">
+                        <Button variant="outline" className="w-full" size="sm">
+                          Admin
                         </Button>
                       </Link>
-                      <Link href="/register" data-testid="link-mobile-register">
-                        <Button variant="outline" className="w-full" onClick={() => setIsMenuOpen(false)}>
-                          Cadastrar
-                        </Button>
-                      </Link>
-                    </div>
-                  )}
+                    )}
+                    <Button 
+                      onClick={() => {
+                        handleLogout();
+                        setIsMenuOpen(false);
+                      }}
+                      variant="outline" 
+                      className="w-full"
+                      size="sm"
+                      disabled={logout.isPending}
+                      data-testid="button-mobile-logout"
+                    >
+                      Sair
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>

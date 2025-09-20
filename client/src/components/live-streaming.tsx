@@ -2,8 +2,12 @@ import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 
 export default function LiveStreaming() {
-  const openTwitch = () => {
-    window.open("https://twitch.tv", "_blank");
+  const openJamalzeralol = () => {
+    window.open("https://www.twitch.tv/jamalzeralol", "_blank");
+  };
+
+  const openMecwelll = () => {
+    window.open("https://www.twitch.tv/mecwelll", "_blank");
   };
 
   const openYouTube = () => {
@@ -22,33 +26,64 @@ export default function LiveStreaming() {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Jamalzeralol */}
           <div className="minimal-border p-8 text-center minimal-hover">
             <div className="w-16 h-16 mx-auto mb-6 bg-purple-600/10 rounded-full flex items-center justify-center">
               <svg className="w-8 h-8 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428C1.714 21.143 2.571 22 3.43 22h17.143c.857 0 1.714-.857 1.714-1.286V4.286L17.714 0zm14.571 20.571H3.43V6.286L6 3.714h12l2.571 2.572z"/>
               </svg>
             </div>
-            <h3 className="text-2xl font-heading font-bold mb-4" data-testid="text-twitch-title">Twitch</h3>
-            <p className="text-muted-foreground mb-6">
-              Transmissão principal com chat interativo e análises em tempo real
+            <h3 className="text-xl font-heading font-bold mb-4" data-testid="text-jamalzeralol-title">Jamalzeralol</h3>
+            <p className="text-muted-foreground mb-6 text-sm">
+              Capitão do Te Fizguei - Stream oficial
             </p>
             <div className="flex items-center justify-center space-x-4 mb-6">
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" data-testid="indicator-live"></div>
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" data-testid="indicator-jamalzeralol-live"></div>
                 <span className="text-sm font-semibold text-red-500">AO VIVO</span>
               </div>
-              <span className="text-sm text-muted-foreground" data-testid="text-twitch-viewers">
-                2.1K espectadores
+              <span className="text-sm text-muted-foreground" data-testid="text-jamalzeralol-viewers">
+                1.2K espectadores
               </span>
             </div>
             <Button 
-              onClick={openTwitch}
+              onClick={openJamalzeralol}
               className="bg-purple-600 hover:bg-purple-700 text-white minimal-hover w-full"
-              data-testid="button-twitch"
+              data-testid="button-jamalzeralol"
             >
               <ExternalLink className="mr-2 h-4 w-4" />
-              Assistir na Twitch
+              Assistir Stream
+            </Button>
+          </div>
+
+          {/* Mecwelll */}
+          <div className="minimal-border p-8 text-center minimal-hover">
+            <div className="w-16 h-16 mx-auto mb-6 bg-purple-600/10 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428C1.714 21.143 2.571 22 3.43 22h17.143c.857 0 1.714-.857 1.714-1.286V4.286L17.714 0zm14.571 20.571H3.43V6.286L6 3.714h12l2.571 2.572z"/>
+              </svg>
+            </div>
+            <h3 className="text-xl font-heading font-bold mb-4" data-testid="text-mecwelll-title">Mecwelll</h3>
+            <p className="text-muted-foreground mb-6 text-sm">
+              Streamer oficial do campeonato
+            </p>
+            <div className="flex items-center justify-center space-x-4 mb-6">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" data-testid="indicator-mecwelll-live"></div>
+                <span className="text-sm font-semibold text-red-500">AO VIVO</span>
+              </div>
+              <span className="text-sm text-muted-foreground" data-testid="text-mecwelll-viewers">
+                890 espectadores
+              </span>
+            </div>
+            <Button 
+              onClick={openMecwelll}
+              className="bg-purple-600 hover:bg-purple-700 text-white minimal-hover w-full"
+              data-testid="button-mecwelll"
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Assistir Stream
             </Button>
           </div>
           

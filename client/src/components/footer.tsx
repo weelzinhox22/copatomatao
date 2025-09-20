@@ -126,9 +126,22 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors duration-200" data-testid="link-privacy">
+                <Link 
+                  href="/privacy-policy" 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200" 
+                  data-testid="link-privacy"
+                >
                   Política de Privacidade
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/cookie-policy" 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200" 
+                  data-testid="link-cookies"
+                >
+                  Política de Cookies
+                </Link>
               </li>
             </ul>
           </div>

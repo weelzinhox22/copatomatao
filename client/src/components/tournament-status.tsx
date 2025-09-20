@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Trophy, Calendar, Users, Target, Clock, Zap, Crown } from "lucide-react";
+import { Link } from "wouter";
 
 // Dados fictícios do torneio
 const mockTournamentData = {
@@ -180,13 +181,15 @@ export default function TournamentStatus() {
 
         {/* Action Button */}
         <div className="text-center mt-12">
-          <Button 
-            className="bg-gradient-to-r from-secondary to-primary hover:from-secondary/90 hover:to-primary/90 text-white glow-hover border-0 px-8 py-4 text-lg font-semibold glow-soft"
-            data-testid="button-view-bracket"
-          >
-            <Trophy className="mr-2 w-5 h-5" />
-            Ver Chaveamento Completo
-          </Button>
+          <Link href="/tournament">
+            <Button 
+              className="bg-gradient-to-r from-secondary to-primary hover:from-secondary/90 hover:to-primary/90 text-white glow-hover border-0 px-8 py-4 text-lg font-semibold glow-soft"
+              data-testid="button-view-bracket"
+            >
+              <Trophy className="mr-2 w-5 h-5" />
+              Ver Chaveamento Completo
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

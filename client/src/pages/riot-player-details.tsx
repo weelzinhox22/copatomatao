@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Trophy, Target, Zap, Crown, Shield, Clock, RefreshCw, Star, Award, Flame, Sword } from "lucide-react";
 import { Link } from "wouter";
-import { useRiotPlayer, useRiotMatchesExpanded, formatRank, getChampionImageUrl, getProfileIconUrl, getRankImageUrl, formatGameDuration } from "@/hooks/useRiotAPI";
-import AdvancedMatchHistory from "@/components/advanced-match-history";
+import { useRiotPlayer, formatRank, getChampionImageUrl, getProfileIconUrl, getRankImageUrl } from "@/hooks/useRiotAPI";
+import { getPlayerState } from "@/data/players-state";
 
 // Jogadores oficiais do campeonato Copa Tomatão
 const officialPlayers = [
@@ -73,7 +73,6 @@ export default function RiotPlayerDetails() {
   const gameName = params?.gameName ? decodeURIComponent(params.gameName) : "";
   const tagLine = params?.tagLine ? decodeURIComponent(params.tagLine) : "";
   
-  const [activeTab, setActiveTab] = useState<'championship' | 'ranked'>('championship');
 
   // Buscar dados do jogador na lista oficial
   const officialPlayerData = officialPlayers.find(
@@ -81,11 +80,10 @@ export default function RiotPlayerDetails() {
     player.tagLine.toLowerCase() === tagLine.toLowerCase()
   );
 
+  // Buscar dados estáticos do jogador
+  const staticPlayerData = getPlayerState(gameName, tagLine);
+
   const { data: playerData, isLoading, error, refetch: refetchPlayer } = useRiotPlayer(gameName, tagLine);
-  const { data: matchHistory, isLoading: matchesLoading, refetch: refetchMatches } = useRiotMatchesExpanded(
-    playerData?.account?.puuid || "", 
-    20
-  );
 
   // Processar dados da API
   const soloQueueEntry = playerData?.leagueEntries?.find(entry => entry.queueType === 'RANKED_SOLO_5x5');
@@ -119,10 +117,7 @@ export default function RiotPlayerDetails() {
 
   const handleRefresh = async () => {
     // Force refresh by invalidating cache
-    await Promise.all([
-      refetchPlayer(),
-      refetchMatches()
-    ]);
+    await refetchPlayer();
   };
 
   if (isLoading) {
@@ -150,23 +145,23 @@ export default function RiotPlayerDetails() {
                   Voltar aos Jogadores
                 </Button>
               </Link>
-              <div className="flex items-center gap-2 text-orange-400">
+              <div className="flex items-center gap-2 text-primary">
                 <RefreshCw className="w-4 h-4" />
-                <span className="text-sm">API Offline</span>
+                <span className="text-sm">Atualizar</span>
               </div>
             </div>
 
             {/* Player Header Card - Modo Offline */}
-            <div className="glass-card p-8 rounded-xl glow-soft border border-orange-500/30">
+            <div className="glass-card p-8 rounded-xl glow-soft">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-6">
                   <div className="relative">
-                    <div className="w-24 h-24 bg-gradient-to-br from-orange-500 to-red-500 rounded-full border-4 border-orange-400 glow-soft flex items-center justify-center">
+                    <div className="w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded-full border-4 border-primary glow-soft flex items-center justify-center">
                       <span className="text-3xl font-bold text-white">
                         {gameName.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <div className="absolute -bottom-2 -right-2 bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+                    <div className="absolute -bottom-2 -right-2 bg-primary text-white text-sm font-bold px-3 py-1 rounded-full">
                       ?
                     </div>
                   </div>
@@ -197,27 +192,80 @@ export default function RiotPlayerDetails() {
                 </div>
               </div>
 
-              {/* Status da API */}
+              {/* Status do Jogador */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="glass-card p-4 rounded-lg text-center border border-orange-500/30">
-                  <div className="text-2xl font-bold text-orange-400">Offline</div>
-                  <div className="text-sm text-gray-400">API da Riot</div>
+                <div className="glass-card p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-primary">Copa Tomatão</div>
+                  <div className="text-sm text-gray-400">Participante</div>
                 </div>
                 <div className="glass-card p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-primary">-</div>
-                  <div className="text-sm text-gray-400">KDA Médio</div>
+                  <div className="text-2xl font-bold text-primary">
+                    {staticPlayerData?.currentRank ? `${staticPlayerData.currentRank.tier} ${staticPlayerData.currentRank.rank}` : 'Unranked'}
+                  </div>
+                  <div className="text-sm text-gray-400">Rank Atual</div>
                 </div>
                 <div className="glass-card p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-secondary">-</div>
-                  <div className="text-sm text-gray-400">Partidas Recentes</div>
+                  <div className="text-2xl font-bold text-secondary">
+                    {staticPlayerData?.summonerLevel || '?'}
+                  </div>
+                  <div className="text-sm text-gray-400">Nível</div>
                 </div>
                 <div className="glass-card p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-accent">-</div>
+                  <div className="text-2xl font-bold text-accent">
+                    {staticPlayerData?.currentRank?.leaguePoints || 0}
+                  </div>
                   <div className="text-sm text-gray-400">League Points</div>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Champion Masteries - Modo Offline */}
+          {staticPlayerData?.championMasteries && (
+            <div className="mt-8">
+              <Card className="glass-card glow-hover">
+                <CardHeader>
+                  <CardTitle className="text-3xl font-heading neon-text flex items-center justify-center gap-3">
+                    <Crown className="h-8 w-8 text-yellow-400" />
+                    Campeões Principais
+                    <Crown className="h-8 w-8 text-yellow-400" />
+                  </CardTitle>
+                  <p className="text-center text-gray-300 text-lg">
+                    Os campeões que este jogador mais domina
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex justify-center">
+                    <div className="flex flex-wrap justify-center gap-8 max-w-6xl">
+                      {staticPlayerData.championMasteries.slice(0, 5).map((mastery, index) => (
+                        <div key={mastery.championId} className="glass-card p-6 rounded-xl text-center hover:glow-soft transition-all duration-300 group min-w-[200px]">
+                          <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-4 border-white/20 shadow-lg group-hover:border-primary/50 transition-all duration-300">
+                            <img
+                              src={getChampionImageUrl(mastery.championName)}
+                              alt={mastery.championName}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = getChampionImageUrl("Aatrox");
+                              }}
+                            />
+                          </div>
+                          <div className="font-bold text-white text-lg mb-2">
+                            {mastery.championName}
+                          </div>
+                          <div className="text-sm text-gray-400 mb-2">
+                            Level {mastery.championLevel}
+                          </div>
+                          <div className="text-sm text-primary font-bold">
+                            {mastery.championPoints.toLocaleString()} pts
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
           {/* Copa Tomatão Section - Modo Offline */}
           <div className="mt-8">
@@ -277,11 +325,11 @@ export default function RiotPlayerDetails() {
                         <div className="text-lg text-gray-300 mb-2">
                           {officialPlayerData ? 'Jogador Oficial da Copa Tomatão' : 'Jogador Cadastrado'}
                         </div>
-                        <div className="text-sm text-gray-400">Dados da API indisponíveis no momento</div>
+                        <div className="text-sm text-gray-400">Jogador oficial da Copa Tomatão</div>
                       </div>
                       <div className="mt-4">
-                        <div className="text-lg text-yellow-400 font-bold">API Offline</div>
-                        <div className="text-sm text-gray-400">Os dados serão carregados quando a API estiver disponível</div>
+                        <div className="text-lg text-primary font-bold">Participante Ativo</div>
+                        <div className="text-sm text-gray-400">Jogador cadastrado no campeonato</div>
                       </div>
                     </div>
                   </div>
@@ -314,10 +362,9 @@ export default function RiotPlayerDetails() {
                       <div>
                         <h5 className="text-xl font-bold text-white mb-2">Sobre o Jogador</h5>
                         <p className="text-gray-300 text-lg leading-relaxed">
-                          Este jogador é um participante oficial da Copa Tomatão. Quando a API da Riot Games 
-                          estiver disponível, você poderá ver suas estatísticas detalhadas, histórico de partidas 
-                          ranqueadas e informações completas do perfil. Por enquanto, você pode acompanhar 
-                          seu desempenho através das partidas oficiais do campeonato.
+                          Este jogador é um participante oficial da Copa Tomatão. Você pode acompanhar 
+                          seu desempenho através das partidas oficiais do campeonato e ver suas informações 
+                          detalhadas como participante do evento.
                         </p>
                       </div>
                     </div>
@@ -439,77 +486,64 @@ export default function RiotPlayerDetails() {
           </div>
         </div>
 
-        {/* Champion Masteries - TOPO */}
+        {/* Champion Masteries - CENTRALIZADO */}
         <div className="mt-8">
           <Card className="glass-card glow-hover">
             <CardHeader>
-              <CardTitle className="text-2xl font-heading neon-text flex items-center gap-2">
-                <Crown className="h-6 w-6" />
+              <CardTitle className="text-3xl font-heading neon-text flex items-center justify-center gap-3">
+                <Crown className="h-8 w-8 text-yellow-400" />
                 Campeões Principais
+                <Crown className="h-8 w-8 text-yellow-400" />
               </CardTitle>
+              <p className="text-center text-gray-300 text-lg">
+                Os campeões que este jogador mais domina
+              </p>
             </CardHeader>
             <CardContent>
               {playerData.championMasteries.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                  {playerData.championMasteries.slice(0, 5).map((mastery, index) => (
-                    <div key={mastery.championId} className="glass-card p-4 rounded-lg text-center hover:glow-soft transition-all duration-300">
-                      <div className="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden border-2 border-white/20">
-                        <img
-                          src={getChampionImageUrl(mastery.championName || `Champion${mastery.championId}`)}
-                          alt={mastery.championName || `Champion ${mastery.championId}`}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = getChampionImageUrl("Aatrox");
-                          }}
-                        />
+                <div className="flex justify-center">
+                  <div className="flex flex-wrap justify-center gap-8 max-w-6xl">
+                    {playerData.championMasteries.slice(0, 5).map((mastery, index) => (
+                      <div key={mastery.championId} className="glass-card p-6 rounded-xl text-center hover:glow-soft transition-all duration-300 group min-w-[200px]">
+                        <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-4 border-white/20 shadow-lg group-hover:border-primary/50 transition-all duration-300">
+                          <img
+                            src={getChampionImageUrl(mastery.championName || `Champion${mastery.championId}`)}
+                            alt={mastery.championName || `Champion ${mastery.championId}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = getChampionImageUrl("Aatrox");
+                            }}
+                          />
+                        </div>
+                        <div className="font-bold text-white text-lg mb-2">
+                          {mastery.championName || `Campeão ${mastery.championId}`}
+                        </div>
+                        <div className="text-sm text-gray-400 mb-2">
+                          Level {mastery.championLevel}
+                        </div>
+                        <div className="text-sm text-primary font-bold">
+                          {mastery.championPoints.toLocaleString()} pts
+                        </div>
                       </div>
-                      <div className="font-semibold text-white text-sm mb-1">
-                        {mastery.championName || `Campeão ${mastery.championId}`}
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        Level {mastery.championLevel}
-                      </div>
-                      <div className="text-xs text-primary font-bold">
-                        {mastery.championPoints.toLocaleString()} pts
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               ) : (
-                <p className="text-gray-400 text-center py-8">
-                  Nenhuma maestria encontrada
-                </p>
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gray-700 rounded-full flex items-center justify-center">
+                    <Crown className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <p className="text-gray-400 text-lg">
+                    Nenhuma maestria encontrada
+                  </p>
+                </div>
               )}
             </CardContent>
           </Card>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="mt-8">
-          <div className="flex space-x-1 bg-gray-800/50 p-1 rounded-lg">
-            <button 
-              onClick={() => setActiveTab('championship')}
-              className={`flex-1 py-3 px-6 rounded-md font-semibold transition-all duration-300 ${
-                activeTab === 'championship' ? 'bg-primary text-white shadow-lg' : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              <Trophy className="h-5 w-5 inline mr-2" />
-              Copa Tomatão
-            </button>
-            <button 
-              onClick={() => setActiveTab('ranked')}
-              className={`flex-1 py-3 px-6 rounded-md font-semibold transition-all duration-300 ${
-                activeTab === 'ranked' ? 'bg-primary text-white shadow-lg' : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              <Target className="h-5 w-5 inline mr-2" />
-              Partidas Ranqueadas
-            </button>
-          </div>
-        </div>
 
         {/* Copa Tomatão Section - DESTAQUE PRINCIPAL */}
-        {activeTab === 'championship' && (
         <div className="mt-8">
           <Card className="glass-card glow-hover border-2 border-yellow-400/30">
             <CardHeader className="bg-gradient-to-r from-yellow-400/20 to-orange-500/20 rounded-t-xl">
@@ -599,28 +633,7 @@ export default function RiotPlayerDetails() {
             </CardContent>
           </Card>
         </div>
-        )}
 
-        {/* Partidas Ranqueadas Section */}
-        {activeTab === 'ranked' && (
-        <div className="mt-8">
-          <Card className="glass-card glow-hover">
-            <CardHeader>
-              <CardTitle className="text-2xl font-heading neon-text flex items-center gap-2">
-                <Target className="h-6 w-6" />
-                Histórico de Partidas Ranqueadas
-              </CardTitle>
-              <p className="text-gray-400">Partidas recentes do modo ranqueado</p>
-            </CardHeader>
-            <CardContent>
-              <AdvancedMatchHistory 
-                matches={matchHistory?.matches || []} 
-                isLoading={matchesLoading}
-              />
-            </CardContent>
-          </Card>
-        </div>
-        )}
 
         {/* Sidebar - Estatísticas Gerais */}
         <div className="mt-12">

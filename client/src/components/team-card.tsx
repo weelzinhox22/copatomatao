@@ -26,6 +26,7 @@ interface TeamCardProps {
   team: TeamData;
   compact?: boolean;
   index?: number;
+  onViewDetails?: (team: TeamData) => void;
 }
 
 const laneIcons = {
@@ -44,49 +45,93 @@ const laneColors = {
   support: 'from-blue-500 to-cyan-500'
 };
 
-export default function TeamCard({ team, compact = false, index = 0 }: TeamCardProps) {
+export default function TeamCard({ team, compact = false, index = 0, onViewDetails }: TeamCardProps) {
   const winRate = team.wins + team.losses > 0 ? ((team.wins / (team.wins + team.losses)) * 100).toFixed(0) : '0';
   const completedRoster = Object.values(team.players).filter(player => player).length;
 
   if (compact) {
     return (
       <div 
-        className="glass-card p-4 rounded-xl glow-hover group cursor-pointer animate-fade-in-up"
+        className="relative group h-full"
         style={{ animationDelay: `${index * 0.1}s` }}
       >
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center glow-soft">
-              {team.logoUrl ? (
-                <img src={team.logoUrl} alt={team.name} className="w-12 h-12 rounded-full object-cover" />
-              ) : (
-                <Users className="w-8 h-8 text-white" />
-              )}
-            </div>
-            {team.featured && (
-              <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                <Crown className="w-3 h-3 text-white" />
-              </div>
-            )}
+        {/* Card Principal */}
+        <div className="glass-card p-8 rounded-2xl glow-hover border border-white/10 hover:border-yellow-400/50 transition-all duration-300 group-hover:scale-105 relative overflow-hidden h-full flex flex-col">
+          {/* Background Pattern Sutil */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-yellow-400 to-orange-500 rounded-full blur-2xl"></div>
           </div>
-          
-          <div className="flex-1 min-w-0">
-            <h3 className="font-heading font-bold text-white neon-text group-hover:text-primary transition-colors duration-300">
+
+          {/* Logo do Time */}
+          <div className="relative z-10 text-center mb-6 flex-shrink-0">
+            <div className="relative mx-auto w-24 h-24 mb-4">
+              {/* Brilho de fundo sutil */}
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full blur-lg opacity-20"></div>
+              
+              {/* Container do logo */}
+              <div className="relative w-full h-full bg-white/10 rounded-full p-3 border-2 border-yellow-400/30 group-hover:border-yellow-400/60 transition-all duration-300">
+                {team.logoUrl ? (
+                  <img
+                    src={team.logoUrl}
+                    alt={`${team.name} Logo`}
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "/src/assets/copa tomataão.png";
+                    }}
+                  />
+                ) : (
+                  <Users className="w-full h-full text-white" />
+                )}
+              </div>
+              
+              {/* Efeito de brilho rotativo sutil */}
+              <div className="absolute inset-0 rounded-full border border-yellow-400/20 animate-spin-slow"></div>
+            </div>
+            
+            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
               {team.name}
             </h3>
-            <p className="text-sm text-gray-400 mb-1">
-              Capitão: {team.captain}
+          </div>
+
+          {/* Informações do Time */}
+          <div className="relative z-10 space-y-4 flex-grow flex flex-col justify-between">
+            <p className="text-gray-300 text-sm text-center leading-relaxed">
+              {team.description}
             </p>
-            <div className="flex items-center gap-4 text-xs text-gray-400">
-              <span>{completedRoster}/5 jogadores</span>
-              <span>{team.points} pts</span>
-              <span>{winRate}% vitórias</span>
+            
+            {/* Jogadores */}
+            <div className="space-y-2 mt-auto">
+              <div className="flex items-center gap-2 mb-2">
+                <Star className="w-4 h-4 text-yellow-400" />
+                <span className="text-sm font-semibold text-gray-400">Jogadores</span>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {Object.values(team.players).filter(player => player).slice(0, 3).map((player, playerIndex) => (
+                  <span
+                    key={playerIndex}
+                    className="text-xs bg-white/10 px-2 py-1 rounded-full text-white hover:bg-yellow-400/20 transition-colors"
+                  >
+                    {player}
+                  </span>
+                ))}
+                {Object.values(team.players).filter(player => player).length > 3 && (
+                  <span className="text-xs bg-yellow-400/20 px-2 py-1 rounded-full text-yellow-400">
+                    +{Object.values(team.players).filter(player => player).length - 3}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-          
-          <div className="text-right">
-            <div className="text-lg font-bold text-green-400">{team.wins}</div>
-            <div className="text-xs text-gray-400">vitórias</div>
+
+          {/* Status Badge */}
+          <div className="absolute top-4 right-4 z-10">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+                CONFIRMADO
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -222,6 +267,7 @@ export default function TeamCard({ team, compact = false, index = 0 }: TeamCardP
       {/* Action Button */}
       <div className="p-6 pt-0">
         <Button 
+          onClick={() => onViewDetails?.(team)}
           className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white glow-hover border-0"
         >
           Ver Detalhes

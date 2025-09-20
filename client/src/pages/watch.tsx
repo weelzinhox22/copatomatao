@@ -13,6 +13,14 @@ export default function Watch() {
     window.open("https://twitch.tv", "_blank");
   };
 
+  const openJamalzeralol = () => {
+    window.open("https://www.twitch.tv/jamalzeralol", "_blank");
+  };
+
+  const openMecwelll = () => {
+    window.open("https://www.twitch.tv/mecwelll", "_blank");
+  };
+
   const openYouTube = () => {
     window.open("https://youtube.com", "_blank");
   };
@@ -72,8 +80,8 @@ export default function Watch() {
         )}
 
         {/* Streaming Platforms */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {/* Twitch */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          {/* Jamalzeralol Twitch */}
           <Card className="neon-border">
             <CardHeader className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 bg-purple-600 rounded-full flex items-center justify-center">
@@ -81,8 +89,8 @@ export default function Watch() {
                   <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428C1.714 21.143 2.571 22 3.43 22h17.143c.857 0 1.714-.857 1.714-1.286V4.286L17.714 0zm14.571 20.571H3.43V6.286L6 3.714h12l2.571 2.572z"/>
                 </svg>
               </div>
-              <CardTitle className="text-2xl font-gaming" data-testid="text-twitch-title">TWITCH</CardTitle>
-              <p className="text-muted-foreground">Transmissão principal com chat interativo</p>
+              <CardTitle className="text-xl font-gaming" data-testid="text-jamalzeralol-title">JAMALZERALOL</CardTitle>
+              <p className="text-muted-foreground text-sm">Capitão do Te Fizguei</p>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-center">
@@ -90,8 +98,8 @@ export default function Watch() {
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                   <span className="text-sm font-semibold text-red-500">AO VIVO</span>
                 </div>
-                <p className="text-sm text-muted-foreground" data-testid="text-twitch-viewers">
-                  2.1K espectadores assistindo
+                <p className="text-sm text-muted-foreground" data-testid="text-jamalzeralol-viewers">
+                  1.2K espectadores
                 </p>
               </div>
               <div className="space-y-2 text-sm">
@@ -101,20 +109,66 @@ export default function Watch() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Chat:</span>
-                  <span className="text-green-500">Disponível</span>
+                  <span className="text-green-500">Ativo</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Replay:</span>
-                  <span className="text-green-500">Sim</span>
+                  <span className="text-muted-foreground">Status:</span>
+                  <span className="text-yellow-500">Streaming</span>
                 </div>
               </div>
               <Button 
-                onClick={openTwitch}
+                onClick={openJamalzeralol}
                 className="w-full bg-purple-600 hover:bg-purple-700 neon-glow"
-                data-testid="button-twitch-watch"
+                data-testid="button-jamalzeralol-watch"
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
-                Assistir na Twitch
+                Assistir Stream
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Mecwelll Twitch */}
+          <Card className="neon-border">
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-purple-600 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428C1.714 21.143 2.571 22 3.43 22h17.143c.857 0 1.714-.857 1.714-1.286V4.286L17.714 0zm14.571 20.571H3.43V6.286L6 3.714h12l2.571 2.572z"/>
+                </svg>
+              </div>
+              <CardTitle className="text-xl font-gaming" data-testid="text-mecwelll-title">MECWELLL</CardTitle>
+              <p className="text-muted-foreground text-sm">Streamer Oficial</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-2 mb-2">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-semibold text-red-500">AO VIVO</span>
+                </div>
+                <p className="text-sm text-muted-foreground" data-testid="text-mecwelll-viewers">
+                  890 espectadores
+                </p>
+              </div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Qualidade:</span>
+                  <span>1080p60</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Chat:</span>
+                  <span className="text-green-500">Ativo</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Status:</span>
+                  <span className="text-yellow-500">Streaming</span>
+                </div>
+              </div>
+              <Button 
+                onClick={openMecwelll}
+                className="w-full bg-purple-600 hover:bg-purple-700 neon-glow"
+                data-testid="button-mecwelll-watch"
+              >
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Assistir Stream
               </Button>
             </CardContent>
           </Card>

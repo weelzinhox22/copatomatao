@@ -9,6 +9,40 @@ import { Link } from "wouter";
 const teams = [
   {
     id: 1,
+    name: "Zeca e os Urubus",
+    captain: "Theushubu",
+    region: "Bahia",
+    wins: 0,
+    losses: 0,
+    winRate: "0%",
+    members: 5,
+    description: "Veteranos experientes que nunca desistem, famosos pelas viradas épicas e espírito de luta.",
+    logo: "/src/assets/logo (1).png",
+    color: "from-green-500 to-emerald-500",
+    status: "Confirmado",
+    points: 0,
+    createdAt: "2025-09-17T16:45:00Z",
+    players: [
+      { name: "Theushubu", role: "Top", champion: "Shen", rank: "Platina 4", isCaptain: true, kda: "2.3", cs: "6.7", winrate: "63%" },
+      { name: "Player2", role: "Jungle", champion: "Warwick", rank: "Ouro 1", isCaptain: false, kda: "2.0", cs: "5.2", winrate: "55%" },
+      { name: "Player3", role: "Mid", champion: "Malzahar", rank: "Ouro 2", isCaptain: false, kda: "2.1", cs: "7.0", winrate: "57%" },
+      { name: "Player4", role: "ADC", champion: "Ashe", rank: "Ouro 3", isCaptain: false, kda: "2.2", cs: "7.8", winrate: "58%" },
+      { name: "Player5", role: "Support", champion: "Leona", rank: "Ouro 4", isCaptain: false, kda: "1.5", cs: "1.1", winrate: "54%" }
+    ],
+    achievements: [
+      "🔄 Especialistas em comebacks",
+      "💯 Veteranos da comunidade",
+      "🏆 Melhor espírito esportivo",
+      "💪 Nunca desistem"
+    ],
+    strategy: "Veteranos experientes que apostam na paciência e experiência. Preparando estratégias para virar jogos difíceis com picks de controle.",
+    strengths: ["Experiência", "Comebacks", "Controle"],
+    weaknesses: ["Agressividade", "Early Game"],
+    playstyle: "Defensivo",
+    formationDate: "17 de Setembro de 2025"
+  },
+  {
+    id: 2,
     name: "Kongs do Atlântico",
     captain: "LDates",
     region: "Bahia",
@@ -17,7 +51,7 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Time dominante da região nordeste, conhecido por suas jogadas agressivas e estratégias inovadoras.",
-    logo: "🦍",
+    logo: "/src/assets/logo (2).png",
     color: "from-blue-500 to-cyan-500",
     status: "Confirmado",
     points: 0,
@@ -42,7 +76,7 @@ const teams = [
     formationDate: "17 de Setembro de 2025"
   },
   {
-    id: 2,
+    id: 3,
     name: "Os Fimos",
     captain: "AZR Aldeath",
     region: "Bahia",
@@ -51,7 +85,7 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Equipe técnica e estratégica, especialistas em late game e teamfights coordenados.",
-    logo: "⚡",
+    logo: "/src/assets/logo (3).png",
     color: "from-purple-500 to-pink-500",
     status: "Confirmado",
     points: 0,
@@ -76,71 +110,37 @@ const teams = [
     formationDate: "17 de Setembro de 2025"
   },
   {
-    id: 3,
-    name: "Te Fizzguei",
-    captain: "Jamal",
+    id: 4,
+    name: "Te Fizguei",
+    captain: "welziinho",
     region: "Bahia",
     wins: 0,
     losses: 0,
     winRate: "0%",
     members: 5,
-    description: "Time jovem e promissor, com grande potencial de crescimento e picks criativos.",
-    logo: "🐟",
-    color: "from-green-500 to-emerald-500",
+    description: "Equipe formada por jogadores individuais de elite.",
+    logo: "/src/assets/logo (4).png",
+    color: "from-orange-500 to-red-500",
     status: "Confirmado",
     points: 0,
     createdAt: "2025-09-17T09:15:00Z",
     players: [
-      { name: "Jamal", role: "Top", champion: "Fizz", rank: "Ouro 1", isCaptain: true, kda: "2.5", cs: "6.9", winrate: "60%" },
-      { name: "Player2", role: "Jungle", champion: "Rek'Sai", rank: "Ouro 2", isCaptain: false, kda: "2.2", cs: "5.5", winrate: "56%" },
-      { name: "Player3", role: "Mid", champion: "Fizz", rank: "Ouro 3", isCaptain: false, kda: "2.6", cs: "7.2", winrate: "58%" },
-      { name: "Player4", role: "ADC", champion: "Lucian", rank: "Ouro 4", isCaptain: false, kda: "2.4", cs: "8.1", winrate: "59%" },
-      { name: "Player5", role: "Support", champion: "Nautilus", rank: "Prata 1", isCaptain: false, kda: "1.6", cs: "1.3", winrate: "53%" }
+      { name: "welziinho", role: "Mid", champion: "Ahri", rank: "Ouro 2", isCaptain: true, kda: "2.5", cs: "7.0", winrate: "60%" },
+      { name: "Beiço Reformed", role: "ADC", champion: "Caitlyn", rank: "Ouro 1", isCaptain: false, kda: "2.8", cs: "8.5", winrate: "65%" },
+      { name: "guizão rapidão", role: "Support", champion: "Thresh", rank: "Ouro 3", isCaptain: false, kda: "1.9", cs: "1.3", winrate: "58%" },
+      { name: "SOU A GUILHOTINA", role: "Top", champion: "Tryndamere", rank: "Platina 3", isCaptain: false, kda: "2.7", cs: "7.2", winrate: "68%" },
+      { name: "BLT Reformed", role: "Jungle", champion: "Lee Sin", rank: "Ouro 4", isCaptain: false, kda: "2.3", cs: "5.8", winrate: "62%" }
     ],
     achievements: [
-      "🌊 Revelação da Copa Tomatão",
-      "💪 Maior potencial de crescimento",
-      "🎯 Estratégias criativas sendo desenvolvidas",
-      "🚀 Picks não convencionais"
+      "🌟 Equipe de jogadores individuais de elite",
+      "🎯 Maior diversidade de estilos",
+      "💫 Flexibilidade tática única",
+      "🚀 Potencial explosivo"
     ],
-    strategy: "Time jovem que aposta na criatividade e picks não convencionais. Preparando estratégias surpresa para o campeonato com composições únicas.",
-    strengths: ["Criatividade", "Surpresa", "Flexibilidade"],
-    weaknesses: ["Experiência", "Consistência"],
-    playstyle: "Criativo",
-    formationDate: "17 de Setembro de 2025"
-  },
-  {
-    id: 4,
-    name: "Zeca e os Urubus",
-    captain: "Theushubu",
-    region: "Bahia",
-    wins: 0,
-    losses: 0,
-    winRate: "0%",
-    members: 5,
-    description: "Veteranos experientes que nunca desistem, famosos pelas viradas épicas e espírito de luta.",
-    logo: "🦅",
-    color: "from-orange-500 to-red-500",
-    status: "Confirmado",
-    points: 0,
-    createdAt: "2025-09-17T16:45:00Z",
-    players: [
-      { name: "Theushubu", role: "Top", champion: "Shen", rank: "Platina 4", isCaptain: true, kda: "2.3", cs: "6.7", winrate: "63%" },
-      { name: "Player2", role: "Jungle", champion: "Warwick", rank: "Ouro 1", isCaptain: false, kda: "2.0", cs: "5.2", winrate: "55%" },
-      { name: "Player3", role: "Mid", champion: "Malzahar", rank: "Ouro 2", isCaptain: false, kda: "2.1", cs: "7.0", winrate: "57%" },
-      { name: "Player4", role: "ADC", champion: "Ashe", rank: "Ouro 3", isCaptain: false, kda: "2.2", cs: "7.8", winrate: "58%" },
-      { name: "Player5", role: "Support", champion: "Leona", rank: "Ouro 4", isCaptain: false, kda: "1.5", cs: "1.1", winrate: "54%" }
-    ],
-    achievements: [
-      "🔄 Especialistas em comebacks",
-      "💯 Veteranos da comunidade",
-      "🏆 Melhor espírito esportivo",
-      "💪 Nunca desistem"
-    ],
-    strategy: "Veteranos experientes que apostam na paciência e experiência. Preparando estratégias para virar jogos difíceis com picks de controle.",
-    strengths: ["Experiência", "Comebacks", "Controle"],
-    weaknesses: ["Agressividade", "Early Game"],
-    playstyle: "Defensivo",
+    strategy: "Equipe formada por jogadores individuais de elite que se adaptam rapidamente. Preparando estratégias flexíveis para o campeonato.",
+    strengths: ["Flexibilidade", "Individualidade", "Adaptação"],
+    weaknesses: ["Coordenação", "Sincronia"],
+    playstyle: "Flexível",
     formationDate: "17 de Setembro de 2025"
   }
 ];
@@ -183,7 +183,19 @@ export default function TeamDetails() {
             <div className="relative z-10">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-6">
-                  <div className="text-8xl">{team.logo}</div>
+                  <div className="relative">
+                    <div className="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center p-4 border-2 border-white/20 shadow-xl">
+                      <img
+                        src={team.logo}
+                        alt={`${team.name} Logo`}
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "/src/assets/copa tomataão.png";
+                        }}
+                      />
+                    </div>
+                    <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${team.color} opacity-20`}></div>
+                  </div>
                   <div>
                     <h1 className="text-4xl font-heading font-bold text-white mb-2">
                       {team.name}

@@ -1,64 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, Trophy, Calendar, MapPin, Star, Shield, Crown, Zap } from "lucide-react";
+import { Users, Trophy, Calendar, MapPin, Star, Shield, Crown, Zap, Share2 } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import ShareCardGenerator from "@/components/share-card-generator";
+import { useShareCard, createTeamCard } from "@/hooks/useShareCard";
 
 // Mock data dos 4 times definidos
 const teams = [
   {
     id: 1,
-    name: "Kongs do Atlântico",
-    captain: "LDates",
-    region: "Bahia",
-    wins: 0,
-    losses: 0,
-    winRate: "0%",
-    members: 5,
-    description: "Time dominante da região nordeste, conhecido por suas jogadas agressivas.",
-    logo: "🦍",
-    color: "from-blue-500 to-cyan-500",
-    status: "Confirmado",
-    points: 0,
-    createdAt: "2025-09-17T10:00:00Z",
-    players: ["LDates", "Player2", "Player3", "Player4", "Player5"]
-  },
-  {
-    id: 2,
-    name: "Os Fimos",
-    captain: "AZR Aldeath",
-    region: "Bahia",
-    wins: 0,
-    losses: 0,
-    winRate: "0%",
-    members: 5,
-    description: "Equipe técnica e estratégica, especialistas em late game.",
-    logo: "⚡",
-    color: "from-purple-500 to-pink-500",
-    status: "Confirmado",
-    points: 0,
-    createdAt: "2025-09-17T14:30:00Z",
-    players: ["AZR Aldeath", "Player2", "Player3", "Player4", "Player5"]
-  },
-  {
-    id: 3,
-    name: "Te Fizzguei",
-    captain: "Jamal",
-    region: "Bahia",
-    wins: 0,
-    losses: 0,
-    winRate: "0%",
-    members: 5,
-    description: "Time jovem e promissor, com grande potencial de crescimento.",
-    logo: "🐟",
-    color: "from-green-500 to-emerald-500",
-    status: "Confirmado",
-    points: 0,
-    createdAt: "2025-09-17T09:15:00Z",
-    players: ["Jamal", "Player2", "Player3", "Player4", "Player5"]
-  },
-  {
-    id: 4,
     name: "Zeca e os Urubus",
     captain: "Theushubu",
     region: "Bahia",
@@ -67,17 +18,81 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Veteranos experientes que nunca desistem, famosos pelas viradas.",
-    logo: "🦅",
-    color: "from-orange-500 to-red-500",
+    logo: "/src/assets/logo (1).png",
+    color: "from-green-500 to-emerald-500",
     status: "Confirmado",
     points: 0,
     createdAt: "2025-09-17T16:45:00Z",
     players: ["Theushubu", "Player2", "Player3", "Player4", "Player5"]
+  },
+  {
+    id: 2,
+    name: "Kongs do Atlântico",
+    captain: "LDates",
+    region: "Bahia",
+    wins: 0,
+    losses: 0,
+    winRate: "0%",
+    members: 5,
+    description: "Time dominante da região nordeste, conhecido por suas jogadas agressivas.",
+    logo: "/src/assets/logo (2).png",
+    color: "from-blue-500 to-cyan-500",
+    status: "Confirmado",
+    points: 0,
+    createdAt: "2025-09-17T10:00:00Z",
+    players: ["LDates", "Player2", "Player3", "Player4", "Player5"]
+  },
+  {
+    id: 3,
+    name: "Os Fimos",
+    captain: "AZR Aldeath",
+    region: "Bahia",
+    wins: 0,
+    losses: 0,
+    winRate: "0%",
+    members: 5,
+    description: "Equipe técnica e estratégica, especialistas em late game.",
+    logo: "/src/assets/logo (3).png",
+    color: "from-purple-500 to-pink-500",
+    status: "Confirmado",
+    points: 0,
+    createdAt: "2025-09-17T14:30:00Z",
+    players: ["AZR Aldeath", "Player2", "Player3", "Player4", "Player5"]
+  },
+  {
+    id: 4,
+    name: "Te Fizguei",
+    captain: "welziinho",
+    region: "Bahia",
+    wins: 0,
+    losses: 0,
+    winRate: "0%",
+    members: 5,
+    description: "Equipe formada por jogadores individuais de elite.",
+    logo: "/src/assets/logo (4).png",
+    color: "from-orange-500 to-red-500",
+    status: "Confirmado",
+    points: 0,
+    createdAt: "2025-09-17T09:15:00Z",
+    players: ["welziinho", "Beiço Reformed", "guizão rapidão", "SOU A GUILHOTINA", "BLT Reformed"]
   }
 ];
 
 export default function Teams() {
   const [, setLocation] = useLocation();
+  const { isOpen, cardData, openShareCard, closeShareCard } = useShareCard();
+
+  const handleShareTeam = (team: typeof teams[0]) => {
+    const teamCardData = createTeamCard({
+      name: team.name,
+      captain: team.captain,
+      wins: team.wins,
+      losses: team.losses,
+      logo: team.logo,
+      description: team.description
+    });
+    openShareCard(teamCardData);
+  };
 
   return (
     <div className="min-h-screen pt-16 bg-background">
@@ -114,8 +129,15 @@ export default function Teams() {
                   <div className="flex items-center gap-4 mb-4">
                     {/* Logo clean */}
                     <div className="relative">
-                      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-3xl shadow-lg border border-gray-700/50 group-hover:border-primary/50 transition-all duration-300">
-                        {team.logo}
+                      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center shadow-lg border border-gray-700/50 group-hover:border-primary/50 transition-all duration-300 p-2">
+                        <img
+                          src={team.logo}
+                          alt={`${team.name} Logo`}
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "/src/assets/copa tomataão.png";
+                          }}
+                        />
                       </div>
                       <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${team.color} opacity-20 group-hover:opacity-30 transition-opacity duration-300`}></div>
                     </div>
@@ -218,6 +240,15 @@ export default function Teams() {
                 >
                   <Trophy className="h-4 w-4" />
                 </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-600 text-white hover:from-green-500 hover:to-emerald-500 hover:border-green-500 h-10 w-10"
+                  onClick={() => handleShareTeam(team)}
+                  data-testid={`button-share-team-${index}`}
+                >
+                  <Share2 className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           ))}
@@ -244,6 +275,7 @@ export default function Teams() {
                   <strong className="text-white text-lg">Composição:</strong>
                   <ul className="text-gray-300 mt-2 space-y-1">
                     <li>• 5 jogadores por time</li>
+                    <li>• 20 jogadores totais</li>
                     <li>• Todos os times confirmados</li>
                     <li>• Apenas diversão entre amigos</li>
                   </ul>
@@ -275,6 +307,14 @@ export default function Teams() {
           </Card>
         </div>
       </div>
+      
+      {/* Share Card Generator Modal */}
+      {isOpen && cardData && (
+        <ShareCardGenerator 
+          data={cardData} 
+          onClose={closeShareCard}
+        />
+      )}
     </div>
   );
 }
