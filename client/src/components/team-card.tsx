@@ -1,5 +1,6 @@
 import { Crown, Users, Trophy, Star, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import copaLogo from "@/assets/copa-tomatao.png";
 
 export interface TeamData {
   id: string;
@@ -77,7 +78,7 @@ export default function TeamCard({ team, compact = false, index = 0, onViewDetai
                     alt={`${team.name} Logo`}
                     className="w-full h-full object-contain"
                     onError={(e) => {
-                             (e.target as HTMLImageElement).src = "/copa-tomatao.png";
+                             (e.target as HTMLImageElement).src = copaLogo;
                     }}
                   />
                 ) : (

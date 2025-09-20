@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Users, Trophy, Star, Crown, Target, Shield, MapPin, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TeamData } from './team-card';
+import copaLogo from "@/assets/copa-tomatao.png";
 
 interface TeamDetailsModalProps {
   team: TeamData | null;
@@ -65,7 +66,7 @@ export default function TeamDetailsModal({ team, isOpen, onClose }: TeamDetailsM
                         alt={`${team.name} Logo`}
                         className="w-full h-full object-contain"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/copa-tomatao.png";
+                          (e.target as HTMLImageElement).src = copaLogo;
                         }}
                       />
                     ) : (

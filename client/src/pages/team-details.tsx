@@ -4,6 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Users, Trophy, Calendar, MapPin, Star, Shield, Crown, Target } from "lucide-react";
 import { Link } from "wouter";
+import logo1 from "@/assets/logo-1.png";
+import logo2 from "@/assets/logo-2.png";
+import logo3 from "@/assets/logo-3.png";
+import logo4 from "@/assets/logo-4.png";
+import copaLogo from "@/assets/copa-tomatao.png";
 
 // Mock data - same as teams page
 const teams = [
@@ -17,7 +22,7 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Veteranos experientes que nunca desistem, famosos pelas viradas épicas e espírito de luta.",
-          logo: "/logo-1.png",
+          logo: logo1,
     color: "from-green-500 to-emerald-500",
     status: "Confirmado",
     points: 0,
@@ -51,7 +56,7 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Time dominante da região nordeste, conhecido por suas jogadas agressivas e estratégias inovadoras.",
-          logo: "/logo-2.png",
+          logo: logo2,
     color: "from-blue-500 to-cyan-500",
     status: "Confirmado",
     points: 0,
@@ -85,7 +90,7 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Equipe técnica e estratégica, especialistas em late game e teamfights coordenados.",
-          logo: "/logo-3.png",
+          logo: logo3,
     color: "from-purple-500 to-pink-500",
     status: "Confirmado",
     points: 0,
@@ -119,7 +124,7 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Equipe formada por jogadores individuais de elite.",
-          logo: "/logo-4.png",
+          logo: logo4,
     color: "from-orange-500 to-red-500",
     status: "Confirmado",
     points: 0,
@@ -190,7 +195,7 @@ export default function TeamDetails() {
                         alt={`${team.name} Logo`}
                         className="w-full h-full object-contain"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/copa-tomatao.png";
+                          (e.target as HTMLImageElement).src = copaLogo;
                         }}
                       />
                     </div>
