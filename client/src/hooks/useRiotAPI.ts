@@ -212,13 +212,13 @@ export function formatGameDuration(seconds: number): string {
 }
 
 export function getChampionImageUrl(championName: string): string {
-  // Riot's Data Dragon CDN for champion images
-  return `https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${championName}.png`;
+  // Riot's Data Dragon CDN for champion images - using latest version
+  return `https://ddragon.leagueoflegends.com/cdn/latest/img/champion/${championName}.png`;
 }
 
 export function getProfileIconUrl(iconId: number): string {
-  // Riot's Data Dragon CDN for profile icons
-  return `https://ddragon.leagueoflegends.com/cdn/13.24.1/img/profileicon/${iconId}.png`;
+  // Riot's Data Dragon CDN for profile icons - using latest version
+  return `https://ddragon.leagueoflegends.com/cdn/latest/img/profileicon/${iconId}.png`;
 }
 
 export function getRankImageUrl(tier: string): string {
