@@ -21,61 +21,92 @@ export default function PWAInstallPopup({ onClose }: PWAInstallPopupProps) {
   const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
+    console.log('PWAInstallPopup: Inicializando...');
+    
     // Detectar iOS
     const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     setIsIOS(iOS);
+    console.log('iOS detectado:', iOS);
 
     // Detectar se já está instalado (modo standalone)
     const standalone = window.matchMedia('(display-mode: standalone)').matches || 
                       (window.navigator as any).standalone === true;
     setIsStandalone(standalone);
+    console.log('Modo standalone:', standalone);
 
     // Escutar evento de instalação
     const handleBeforeInstallPrompt = (e: Event) => {
+      console.log('beforeinstallprompt evento capturado!');
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    // Adicionar listener com capture para garantir que seja capturado
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt, { capture: true });
+
+    // Também tentar capturar no document
+    document.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt, { capture: true });
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt, { capture: true });
+      document.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt, { capture: true });
     };
   }, []);
 
   const handleInstall = async () => {
+    console.log('Tentando instalar PWA...');
+    console.log('deferredPrompt disponível:', !!deferredPrompt);
+    console.log('isIOS:', isIOS);
+    
     // Sempre tentar usar o prompt nativo primeiro
     if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      
-      if (outcome === 'accepted') {
-        console.log('PWA instalado com sucesso!');
+      console.log('Usando prompt nativo...');
+      try {
+        await deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        
+        console.log('Resultado da instalação:', outcome);
+        
+        if (outcome === 'accepted') {
+          console.log('PWA instalado com sucesso!');
+          onClose();
+        } else {
+          console.log('Instalação cancelada pelo usuário');
+          onClose();
+        }
+        
+        setDeferredPrompt(null);
+      } catch (error) {
+        console.error('Erro ao usar prompt nativo:', error);
         onClose();
       }
-      
-      setDeferredPrompt(null);
     } else {
-      // Se não houver prompt nativo, tentar instalar automaticamente
-      try {
-        // Para iOS, tentar usar o prompt nativo se disponível
-        if (isIOS && 'serviceWorker' in navigator) {
-          // Registrar service worker e tentar instalar
-          const registration = await navigator.serviceWorker.register('/sw.js');
-          if (registration) {
-            console.log('Service Worker registrado, tentando instalar...');
-            // Fechar popup sem mostrar instruções
+      console.log('Prompt nativo não disponível, tentando alternativas...');
+      
+      // Para iOS, tentar usar o prompt nativo se disponível
+      if (isIOS) {
+        console.log('iOS detectado, tentando instalação...');
+        try {
+          // Verificar se service worker está disponível
+          if ('serviceWorker' in navigator) {
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            console.log('Service Worker registrado:', registration);
+          }
+          
+          // Tentar forçar o prompt de instalação
+          if ('serviceWorker' in navigator && 'PushManager' in window) {
+            console.log('Recursos PWA disponíveis, fechando popup...');
             onClose();
             return;
           }
+        } catch (error) {
+          console.error('Erro na instalação iOS:', error);
         }
-        
-        // Para outros casos, fechar silenciosamente
-        onClose();
-      } catch (error) {
-        console.log('Instalação automática não disponível');
-        onClose();
       }
+      
+      // Para outros casos, fechar silenciosamente
+      console.log('Fechando popup sem instalação...');
+      onClose();
     }
   };
 

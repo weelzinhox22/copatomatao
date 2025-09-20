@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste PWA - Copa Tomatão</title>
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            max-width: 500px;
+        }
+        button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Copa Tomatão</h1>
+        <h2>Teste de Instalação PWA</h2>
+        
+        <div class="status" id="status">
+            Verificando recursos PWA...
+        </div>
+        
+        <button id="installBtn" onclick="installPWA()" disabled>
+            Instalar App
+        </button>
+        
+        <button onclick="checkPWAStatus()">
+            Verificar Status
+        </button>
+        
+        <div id="logs" style="margin-top: 20px; text-align: left; font-size: 12px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; max-height: 200px; overflow-y: auto;">
+        </div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+        const statusDiv = document.getElementById('status');
+        const installBtn = document.getElementById('installBtn');
+        const logsDiv = document.getElementById('logs');
+
+        function log(message) {
+            console.log(message);
+            logsDiv.innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + message + '</div>';
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+
+        function updateStatus(message) {
+            statusDiv.textContent = message;
+            log(message);
+        }
+
+        function checkPWAStatus() {
+            log('=== VERIFICAÇÃO PWA ===');
+            log('Service Worker: ' + ('serviceWorker' in navigator));
+            log('Manifest: ' + (document.querySelector('link[rel="manifest"]') ? 'Sim' : 'Não'));
+            log('HTTPS: ' + (location.protocol === 'https:' || location.hostname === 'localhost'));
+            log('Display Mode: ' + window.matchMedia('(display-mode: standalone)').matches);
+            log('User Agent: ' + navigator.userAgent);
+            
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    log('Service Workers registrados: ' + registrations.length);
+                    registrations.forEach((reg, index) => {
+                        log(`SW ${index + 1}: ${reg.scope}`);
+                    });
+                });
+            }
+        }
+
+        // Capturar evento beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            log('beforeinstallprompt evento capturado!');
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.disabled = false;
+            updateStatus('✅ PWA pronto para instalação!');
+        });
+
+        async function installPWA() {
+            if (!deferredPrompt) {
+                updateStatus('❌ Prompt de instalação não disponível');
+                return;
+            }
+
+            try {
+                log('Iniciando instalação...');
+                await deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                log('Resultado: ' + outcome);
+                
+                if (outcome === 'accepted') {
+                    updateStatus('🎉 PWA instalado com sucesso!');
+                } else {
+                    updateStatus('❌ Instalação cancelada');
+                }
+                
+                deferredPrompt = null;
+                installBtn.disabled = true;
+            } catch (error) {
+                log('Erro na instalação: ' + error.message);
+                updateStatus('❌ Erro na instalação');
+            }
+        }
+
+        // Verificar status inicial
+        window.addEventListener('load', () => {
+            checkPWAStatus();
+            
+            if (!deferredPrompt) {
+                updateStatus('⏳ Aguardando prompt de instalação...');
+            }
+        });
+    </script>
+</body>
+</html>
