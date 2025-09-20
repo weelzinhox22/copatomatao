@@ -44,6 +44,7 @@ export default function PWAInstallPopup({ onClose }: PWAInstallPopupProps) {
   }, []);
 
   const handleInstall = async () => {
+    // Sempre tentar usar o prompt nativo primeiro
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
@@ -54,29 +55,11 @@ export default function PWAInstallPopup({ onClose }: PWAInstallPopupProps) {
       }
       
       setDeferredPrompt(null);
+    } else {
+      // Se não houver prompt nativo, mostrar mensagem muito simples
+      alert('Para instalar: Use o menu do navegador (⋮) e selecione "Instalar app" ou "Adicionar à tela inicial"');
+      onClose();
     }
-  };
-
-  const handleIOSInstall = () => {
-    // Para iOS, tentar mostrar o prompt nativo primeiro
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      return;
-    }
-    
-    // Se não houver prompt nativo, mostrar instruções
-    const instructions = `
-Para instalar o Copa Tomatão no seu iPhone/iPad:
-
-1. Toque no botão de compartilhar (📤) na barra de navegação
-2. Role para baixo e toque em "Adicionar à Tela de Início"
-3. Toque em "Adicionar" no canto superior direito
-
-Agora você terá acesso rápido ao campeonato!
-    `;
-    
-    alert(instructions);
-    onClose();
   };
 
   // Não mostrar se já estiver instalado
@@ -139,7 +122,7 @@ Agora você terá acesso rápido ao campeonato!
         {/* Install Button */}
         <div className="space-y-3">
           <Button
-            onClick={deferredPrompt ? handleInstall : handleIOSInstall}
+            onClick={handleInstall}
             className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white glow-hover border-0"
           >
             <Download className="mr-2 h-4 w-4" />
