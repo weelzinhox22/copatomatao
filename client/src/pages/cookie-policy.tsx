@@ -429,13 +429,13 @@ export default function CookiePolicy() {
 
               <div className="space-y-4">
                 <div className="border border-blue-500/20 rounded-lg p-4 bg-blue-500/5">
-                  <h4 className="text-blue-400 font-semibold mb-2">Google Analytics</h4>
+                  <h4 className="text-blue-400 font-semibold mb-2">Vercel Analytics</h4>
                   <p className="text-gray-300 text-sm leading-relaxed mb-2">
-                    Utilizamos o Google Analytics para analisar o uso do site. Este serviço pode definir 
-                    cookies para coletar informações sobre sua navegação.
+                    Utilizamos o Vercel Analytics para analisar o uso do site de forma privada e respeitosa. 
+                    Este serviço coleta métricas essenciais sem cookies de terceiros.
                   </p>
                   <p className="text-gray-400 text-xs">
-                    <strong>Política de Privacidade:</strong> <a href="https://policies.google.com/privacy" className="text-primary hover:underline">https://policies.google.com/privacy</a>
+                    <strong>Política de Privacidade:</strong> <a href="https://vercel.com/legal/privacy-policy" className="text-primary hover:underline">https://vercel.com/legal/privacy-policy</a>
                   </p>
                 </div>
 

@@ -25,11 +25,11 @@ export default function ResourceOptimizer() {
   }, [preferences, hasConsent]);
 
   const loadAnalytics = () => {
-    // Simula carregamento do Google Analytics
-    console.log('📊 Analytics carregado - coletando dados de uso');
+    // Vercel Analytics já está integrado via componente <Analytics />
+    console.log('📊 Vercel Analytics ativo - coletando dados de uso');
     
-    // Aqui você pode adicionar o código real do Google Analytics
-    // gtag('config', 'GA_MEASUREMENT_ID');
+    // O Vercel Analytics é carregado automaticamente quando o componente <Analytics /> está presente
+    // Não precisa de configuração adicional
   };
 
   const loadPerformanceOptimizations = () => {

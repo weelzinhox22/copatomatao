@@ -278,8 +278,8 @@ export default function PrivacyPolicy() {
                     Compartilhamos dados com terceiros que nos auxiliam na operação do site:
                   </p>
                   <ul className="text-gray-300 text-sm space-y-1">
-                    <li>• Provedores de hospedagem</li>
-                    <li>• Serviços de análise (Google Analytics)</li>
+                    <li>• Provedores de hospedagem (Vercel)</li>
+                    <li>• Serviços de análise (Vercel Analytics)</li>
                     <li>• Processadores de pagamento</li>
                     <li>• Serviços de e-mail</li>
                   </ul>

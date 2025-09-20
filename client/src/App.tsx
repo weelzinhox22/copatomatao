@@ -9,6 +9,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopButton from "@/components/scroll-to-top-button";
 import CookieBanner from "@/components/cookie-banner";
 import ResourceOptimizer from "@/components/resource-optimizer";
+import { Analytics } from '@vercel/analytics/react';
 import Home from "@/pages/home";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
@@ -62,6 +63,7 @@ function Router() {
       <ScrollToTopButton />
       <CookieBanner />
       <ResourceOptimizer />
+      <Analytics />
     </>
   );
 }
