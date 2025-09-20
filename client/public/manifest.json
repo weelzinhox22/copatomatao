@@ -1,0 +1,87 @@
+{
+  "name": "Copa Tomatão",
+  "short_name": "Copa Tomatão",
+  "description": "O maior campeonato de League of Legends da comunidade brasileira",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
+  "categories": ["games", "sports", "entertainment"],
+  "icons": [
+    {
+      "src": "/assets/copa-tomatao-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/copa-tomatao-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/copa-tomatao-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/assets/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Times",
+      "short_name": "Times",
+      "description": "Ver todos os times participantes",
+      "url": "/teams",
+      "icons": [
+        {
+          "src": "/assets/icon-teams.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Jogadores",
+      "short_name": "Jogadores",
+      "description": "Ver todos os jogadores",
+      "url": "/players",
+      "icons": [
+        {
+          "src": "/assets/icon-players.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Campeonato",
+      "short_name": "Campeonato",
+      "description": "Acompanhar o campeonato",
+      "url": "/tournament",
+      "icons": [
+        {
+          "src": "/assets/icon-tournament.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

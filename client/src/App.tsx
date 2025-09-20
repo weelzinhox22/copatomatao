@@ -9,6 +9,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopButton from "@/components/scroll-to-top-button";
 import CookieBanner from "@/components/cookie-banner";
 import ResourceOptimizer from "@/components/resource-optimizer";
+import PWAInstallManager from "@/components/pwa-install-manager";
 import { Analytics } from '@vercel/analytics/react';
 import Home from "@/pages/home";
 import Login from "@/pages/login";
@@ -63,6 +64,7 @@ function Router() {
       <ScrollToTopButton />
       <CookieBanner />
       <ResourceOptimizer />
+      <PWAInstallManager />
       <Analytics />
     </>
   );
