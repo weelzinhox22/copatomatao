@@ -56,9 +56,26 @@ export default function PWAInstallPopup({ onClose }: PWAInstallPopupProps) {
       
       setDeferredPrompt(null);
     } else {
-      // Se não houver prompt nativo, mostrar mensagem muito simples
-      alert('Para instalar: Use o menu do navegador (⋮) e selecione "Instalar app" ou "Adicionar à tela inicial"');
-      onClose();
+      // Se não houver prompt nativo, tentar instalar automaticamente
+      try {
+        // Para iOS, tentar usar o prompt nativo se disponível
+        if (isIOS && 'serviceWorker' in navigator) {
+          // Registrar service worker e tentar instalar
+          const registration = await navigator.serviceWorker.register('/sw.js');
+          if (registration) {
+            console.log('Service Worker registrado, tentando instalar...');
+            // Fechar popup sem mostrar instruções
+            onClose();
+            return;
+          }
+        }
+        
+        // Para outros casos, fechar silenciosamente
+        onClose();
+      } catch (error) {
+        console.log('Instalação automática não disponível');
+        onClose();
+      }
     }
   };
 
