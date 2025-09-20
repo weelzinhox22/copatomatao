@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth, useLogout } from "@/lib/auth";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import logoImage from '@/assets/copa tomataão.png';
+const logoImage = '/copa-tomatao.png';
 
 export default function Navbar() {
   const [location] = useLocation();

@@ -77,7 +77,7 @@ export default function TeamCard({ team, compact = false, index = 0, onViewDetai
                     alt={`${team.name} Logo`}
                     className="w-full h-full object-contain"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = "/src/assets/copa tomataão.png";
+                             (e.target as HTMLImageElement).src = "/copa-tomatao.png";
                     }}
                   />
                 ) : (

@@ -17,7 +17,7 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Veteranos experientes que nunca desistem, famosos pelas viradas épicas e espírito de luta.",
-    logo: "/src/assets/logo (1).png",
+          logo: "/logo-1.png",
     color: "from-green-500 to-emerald-500",
     status: "Confirmado",
     points: 0,
@@ -51,7 +51,7 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Time dominante da região nordeste, conhecido por suas jogadas agressivas e estratégias inovadoras.",
-    logo: "/src/assets/logo (2).png",
+          logo: "/logo-2.png",
     color: "from-blue-500 to-cyan-500",
     status: "Confirmado",
     points: 0,
@@ -85,7 +85,7 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Equipe técnica e estratégica, especialistas em late game e teamfights coordenados.",
-    logo: "/src/assets/logo (3).png",
+          logo: "/logo-3.png",
     color: "from-purple-500 to-pink-500",
     status: "Confirmado",
     points: 0,
@@ -119,7 +119,7 @@ const teams = [
     winRate: "0%",
     members: 5,
     description: "Equipe formada por jogadores individuais de elite.",
-    logo: "/src/assets/logo (4).png",
+          logo: "/logo-4.png",
     color: "from-orange-500 to-red-500",
     status: "Confirmado",
     points: 0,
@@ -190,7 +190,7 @@ export default function TeamDetails() {
                         alt={`${team.name} Logo`}
                         className="w-full h-full object-contain"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/src/assets/copa tomataão.png";
+                          (e.target as HTMLImageElement).src = "/copa-tomatao.png";
                         }}
                       />
                     </div>

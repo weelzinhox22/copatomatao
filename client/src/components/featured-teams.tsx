@@ -23,7 +23,7 @@ const mockTeams: TeamData[] = [
     founded: "Setembro 2025",
     achievements: ["Especialistas em comebacks", "Veteranos da comunidade", "Melhor espírito esportivo"],
     featured: true,
-    logoUrl: "/src/assets/logo (1).png"
+          logoUrl: "/logo-1.png"
   },
   {
     id: "2",
@@ -43,7 +43,7 @@ const mockTeams: TeamData[] = [
     founded: "Setembro 2025",
     achievements: ["Time confirmado para Copa Tomatão", "Preparação intensiva", "Maior taxa de kills por minuto"],
     featured: true,
-    logoUrl: "/src/assets/logo (2).png"
+          logoUrl: "/logo-2.png"
   },
   {
     id: "3",
@@ -63,7 +63,7 @@ const mockTeams: TeamData[] = [
     founded: "Setembro 2025",
     achievements: ["Estratégias de late game", "Preparação defensiva", "Melhor coordenação de teamfights"],
     featured: true,
-    logoUrl: "/src/assets/logo (3).png"
+          logoUrl: "/logo-3.png"
   },
   {
     id: "4",
@@ -83,7 +83,7 @@ const mockTeams: TeamData[] = [
     founded: "Setembro 2025",
     achievements: ["Equipe de jogadores individuais de elite", "Maior diversidade de estilos", "Flexibilidade tática única"],
     featured: false,
-    logoUrl: "/src/assets/logo (4).png"
+          logoUrl: "/logo-4.png"
   }
 ];
 
