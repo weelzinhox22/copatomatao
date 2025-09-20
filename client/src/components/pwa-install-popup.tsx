@@ -50,15 +50,21 @@ export default function PWAInstallPopup({ onClose }: PWAInstallPopupProps) {
       
       if (outcome === 'accepted') {
         console.log('PWA instalado com sucesso!');
+        onClose();
       }
       
       setDeferredPrompt(null);
-      onClose();
     }
   };
 
   const handleIOSInstall = () => {
-    // Para iOS, mostrar instruções
+    // Para iOS, tentar mostrar o prompt nativo primeiro
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      return;
+    }
+    
+    // Se não houver prompt nativo, mostrar instruções
     const instructions = `
 Para instalar o Copa Tomatão no seu iPhone/iPad:
 
@@ -132,37 +138,13 @@ Agora você terá acesso rápido ao campeonato!
 
         {/* Install Button */}
         <div className="space-y-3">
-          {isIOS ? (
-            <Button
-              onClick={handleIOSInstall}
-              className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white glow-hover border-0"
-            >
-              <Smartphone className="mr-2 h-4 w-4" />
-              Instalar no iPhone/iPad
-            </Button>
-          ) : deferredPrompt ? (
-            <Button
-              onClick={handleInstall}
-              className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white glow-hover border-0"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Instalar App
-            </Button>
-          ) : (
-            <div className="text-center">
-              <p className="text-sm text-gray-400 mb-3">
-                Seu navegador não suporta instalação automática
-              </p>
-              <Button
-                onClick={handleIOSInstall}
-                variant="outline"
-                className="w-full border-white/20 text-white hover:bg-white/10"
-              >
-                <Monitor className="mr-2 h-4 w-4" />
-                Ver Instruções
-              </Button>
-            </div>
-          )}
+          <Button
+            onClick={deferredPrompt ? handleInstall : handleIOSInstall}
+            className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white glow-hover border-0"
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Instalar
+          </Button>
           
           <p className="text-xs text-gray-500 text-center">
             Instale para ter acesso rápido ao Copa Tomatão
