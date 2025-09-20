@@ -73,18 +73,34 @@
     <script type="module" src="/src/main.tsx"></script>
     
     <script>
-      // Remover fallback após carregamento
+      // Remover fallback após carregamento com timeout de segurança
+      let fallbackRemoved = false;
+      
+      function removeFallback() {
+        if (fallbackRemoved) return;
+        fallbackRemoved = true;
+        
+        const fallback = document.getElementById('loading-fallback');
+        if (fallback) {
+          fallback.style.opacity = '0';
+          fallback.style.transition = 'opacity 0.5s ease-out';
+          setTimeout(() => {
+            fallback.remove();
+          }, 500);
+        }
+      }
+      
+      // Remover após carregamento completo
       window.addEventListener('load', () => {
-        setTimeout(() => {
-          const fallback = document.getElementById('loading-fallback');
-          if (fallback) {
-            fallback.style.opacity = '0';
-            fallback.style.transition = 'opacity 0.5s ease-out';
-            setTimeout(() => {
-              fallback.remove();
-            }, 500);
-          }
-        }, 1000);
+        setTimeout(removeFallback, 1000);
+      });
+      
+      // Remover após timeout de segurança (5 segundos)
+      setTimeout(removeFallback, 5000);
+      
+      // Remover quando React estiver pronto
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(removeFallback, 2000);
       });
     </script>
   </body>

@@ -1,68 +1,69 @@
-const CACHE_NAME = 'copa-tomatao-v2';
-const urlsToCache = [
-  '/',
-  '/manifest.json'
-];
+const CACHE_NAME = 'copa-tomatao-v3';
 
 // Instalar service worker
 self.addEventListener('install', (event) => {
   console.log('Service Worker instalando...');
+  // Não forçar ativação imediata para evitar problemas
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Cache aberto');
-        return cache.addAll(urlsToCache);
+        // Não cachear automaticamente para evitar problemas
+        return Promise.resolve();
       })
       .catch((error) => {
         console.log('Erro ao abrir cache:', error);
       })
   );
-  // Forçar ativação imediata
-  self.skipWaiting();
 });
 
-// Interceptar requisições
+// Interceptar requisições de forma mais conservadora
 self.addEventListener('fetch', (event) => {
-  // Só interceptar requisições GET
+  // Só interceptar requisições GET e apenas para recursos estáticos
   if (event.request.method !== 'GET') {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Cache hit - retornar resposta
-        if (response) {
-          return response;
-        }
-        
-        // Cache miss - buscar da rede
-        return fetch(event.request)
-          .then((response) => {
-            // Verificar se a resposta é válida
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
+  // Não interceptar requisições para a página principal para evitar problemas
+  if (event.request.destination === 'document') {
+    return;
+  }
 
-            // Clonar a resposta
-            const responseToCache = response.clone();
+  // Não interceptar requisições para APIs
+  if (event.request.url.includes('/api/')) {
+    return;
+  }
 
-            // Adicionar ao cache
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-
+  // Interceptar apenas recursos estáticos (CSS, JS, imagens)
+  if (event.request.destination === 'style' || 
+      event.request.destination === 'script' || 
+      event.request.destination === 'image') {
+    
+    event.respondWith(
+      caches.match(event.request)
+        .then((response) => {
+          if (response) {
             return response;
-          })
-          .catch(() => {
-            // Se falhar, retornar página offline se for navegação
-            if (event.request.destination === 'document') {
-              return caches.match('/');
-            }
-          });
-      })
-  );
+          }
+          
+          return fetch(event.request)
+            .then((response) => {
+              if (response && response.status === 200) {
+                const responseToCache = response.clone();
+                caches.open(CACHE_NAME)
+                  .then((cache) => {
+                    cache.put(event.request, responseToCache);
+                  });
+              }
+              return response;
+            })
+            .catch(() => {
+              // Se falhar, deixar o navegador lidar com isso
+              return fetch(event.request);
+            });
+        })
+    );
+  }
 });
 
 // Atualizar service worker
@@ -80,6 +81,5 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  // Tomar controle imediato
-  self.clients.claim();
+  // Não tomar controle imediato para evitar problemas
 });
