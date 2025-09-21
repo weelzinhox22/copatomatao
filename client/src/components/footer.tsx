@@ -95,14 +95,22 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors duration-200" data-testid="link-stats">
+                <Link 
+                  href="/statistics" 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200" 
+                  data-testid="link-stats"
+                >
                   Estatísticas
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors duration-200" data-testid="link-rankings">
+                <Link 
+                  href="/rankings" 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200" 
+                  data-testid="link-rankings"
+                >
                   Rankings
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -111,19 +119,19 @@ export default function Footer() {
             <h4 className="font-semibold mb-4" data-testid="text-support-title">Suporte</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors duration-200" data-testid="link-faq">
+                <Link href="/faq" className="text-muted-foreground hover:text-foreground transition-colors duration-200" data-testid="link-faq">
                   FAQ
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors duration-200" data-testid="link-contact">
+                <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors duration-200" data-testid="link-contact">
                   Contato
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors duration-200" data-testid="link-bug-report">
+                <Link href="/bug-report" className="text-muted-foreground hover:text-foreground transition-colors duration-200" data-testid="link-bug-report">
                   Reportar Bug
-                </a>
+                </Link>
               </li>
               <li>
                 <Link 

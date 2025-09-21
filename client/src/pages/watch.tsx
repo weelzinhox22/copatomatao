@@ -21,9 +21,6 @@ export default function Watch() {
     window.open("https://www.twitch.tv/mecwelll", "_blank");
   };
 
-  const openYouTube = () => {
-    window.open("https://youtube.com", "_blank");
-  };
 
   const openDiscord = () => {
     window.open("https://discord.gg", "_blank");
@@ -36,8 +33,29 @@ export default function Watch() {
   const liveMatches = matches?.filter((match: any) => match.status === "live") || [];
 
   return (
-    <div className="min-h-screen pt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen pt-16 relative overflow-hidden">
+      {/* Background Textures */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background"></div>
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-20 left-20 w-40 h-40 bg-primary/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-60 h-60 bg-secondary/30 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-accent/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-48 h-48 bg-indigo-500/20 rounded-full blur-2xl"></div>
+      </div>
+      
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div className="w-full h-full" style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '60px 60px'
+        }}></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-gaming font-bold mb-4">
@@ -69,10 +87,6 @@ export default function Watch() {
                     <Play className="mr-2 h-4 w-4" />
                     Ver na Twitch
                   </Button>
-                  <Button onClick={openYouTube} className="bg-red-600 hover:bg-red-700 neon-glow">
-                    <Play className="mr-2 h-4 w-4" />
-                    Ver no YouTube
-                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -80,45 +94,52 @@ export default function Watch() {
         )}
 
         {/* Streaming Platforms */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="flex justify-center mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl">
           {/* Jamalzeralol Twitch */}
-          <Card className="neon-border">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-purple-600 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <Card className="glass-card border border-white/10 glow-hover relative overflow-hidden">
+            {/* Card Background Texture */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute top-4 right-4 w-20 h-20 bg-purple-500/20 rounded-full blur-2xl"></div>
+              <div className="absolute bottom-4 left-4 w-16 h-16 bg-primary/20 rounded-full blur-2xl"></div>
+            </div>
+            
+            <CardHeader className="text-center relative z-10">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-600/20 to-purple-800/20 rounded-full flex items-center justify-center border border-purple-500/20">
+                <svg className="w-10 h-10 text-purple-400" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428C1.714 21.143 2.571 22 3.43 22h17.143c.857 0 1.714-.857 1.714-1.286V4.286L17.714 0zm14.571 20.571H3.43V6.286L6 3.714h12l2.571 2.572z"/>
                 </svg>
               </div>
-              <CardTitle className="text-xl font-gaming" data-testid="text-jamalzeralol-title">JAMALZERALOL</CardTitle>
-              <p className="text-muted-foreground text-sm">Capitão do Te Fizguei</p>
+              <CardTitle className="text-2xl font-gaming text-white" data-testid="text-jamalzeralol-title">JAMALZERALOL</CardTitle>
+              <p className="text-gray-300 text-sm">Capitão do Te Fizguei</p>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 relative z-10">
               <div className="text-center">
                 <div className="flex items-center justify-center space-x-2 mb-2">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-semibold text-red-500">AO VIVO</span>
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-semibold text-red-400">AO VIVO</span>
                 </div>
-                <p className="text-sm text-muted-foreground" data-testid="text-jamalzeralol-viewers">
+                <p className="text-sm text-gray-400" data-testid="text-jamalzeralol-viewers">
                   1.2K espectadores
                 </p>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Qualidade:</span>
-                  <span>1080p60</span>
+                  <span className="text-gray-400">Qualidade:</span>
+                  <span className="text-white">1080p60</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Chat:</span>
-                  <span className="text-green-500">Ativo</span>
+                  <span className="text-gray-400">Chat:</span>
+                  <span className="text-green-400">Ativo</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Status:</span>
-                  <span className="text-yellow-500">Streaming</span>
+                  <span className="text-gray-400">Status:</span>
+                  <span className="text-yellow-400">Streaming</span>
                 </div>
               </div>
               <Button 
                 onClick={openJamalzeralol}
-                className="w-full bg-purple-600 hover:bg-purple-700 neon-glow"
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white glow-hover border-0 py-3"
                 data-testid="button-jamalzeralol-watch"
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
@@ -128,43 +149,49 @@ export default function Watch() {
           </Card>
 
           {/* Mecwelll Twitch */}
-          <Card className="neon-border">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-purple-600 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <Card className="glass-card border border-white/10 glow-hover relative overflow-hidden">
+            {/* Card Background Texture */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute top-4 right-4 w-20 h-20 bg-purple-500/20 rounded-full blur-2xl"></div>
+              <div className="absolute bottom-4 left-4 w-16 h-16 bg-secondary/20 rounded-full blur-2xl"></div>
+            </div>
+            
+            <CardHeader className="text-center relative z-10">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-600/20 to-purple-800/20 rounded-full flex items-center justify-center border border-purple-500/20">
+                <svg className="w-10 h-10 text-purple-400" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428C1.714 21.143 2.571 22 3.43 22h17.143c.857 0 1.714-.857 1.714-1.286V4.286L17.714 0zm14.571 20.571H3.43V6.286L6 3.714h12l2.571 2.572z"/>
                 </svg>
               </div>
-              <CardTitle className="text-xl font-gaming" data-testid="text-mecwelll-title">MECWELLL</CardTitle>
-              <p className="text-muted-foreground text-sm">Streamer Oficial</p>
+              <CardTitle className="text-2xl font-gaming text-white" data-testid="text-mecwelll-title">MECWELLL</CardTitle>
+              <p className="text-gray-300 text-sm">Streamer Oficial</p>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 relative z-10">
               <div className="text-center">
                 <div className="flex items-center justify-center space-x-2 mb-2">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-semibold text-red-500">AO VIVO</span>
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-semibold text-red-400">AO VIVO</span>
                 </div>
-                <p className="text-sm text-muted-foreground" data-testid="text-mecwelll-viewers">
+                <p className="text-sm text-gray-400" data-testid="text-mecwelll-viewers">
                   890 espectadores
                 </p>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Qualidade:</span>
-                  <span>1080p60</span>
+                  <span className="text-gray-400">Qualidade:</span>
+                  <span className="text-white">1080p60</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Chat:</span>
-                  <span className="text-green-500">Ativo</span>
+                  <span className="text-gray-400">Chat:</span>
+                  <span className="text-green-400">Ativo</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Status:</span>
-                  <span className="text-yellow-500">Streaming</span>
+                  <span className="text-gray-400">Status:</span>
+                  <span className="text-yellow-400">Streaming</span>
                 </div>
               </div>
               <Button 
                 onClick={openMecwelll}
-                className="w-full bg-purple-600 hover:bg-purple-700 neon-glow"
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white glow-hover border-0 py-3"
                 data-testid="button-mecwelll-watch"
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
@@ -173,90 +200,51 @@ export default function Watch() {
             </CardContent>
           </Card>
 
-          {/* YouTube */}
-          <Card className="neon-border">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-red-600 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-              </div>
-              <CardTitle className="text-2xl font-gaming" data-testid="text-youtube-title">YOUTUBE</CardTitle>
-              <p className="text-muted-foreground">Stream alternativa com highlights</p>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="text-center">
-                <div className="flex items-center justify-center space-x-2 mb-2">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-semibold text-red-500">AO VIVO</span>
-                </div>
-                <p className="text-sm text-muted-foreground" data-testid="text-youtube-viewers">
-                  890 espectadores assistindo
-                </p>
-              </div>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Qualidade:</span>
-                  <span>1080p60</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Chat:</span>
-                  <span className="text-green-500">Disponível</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Replay:</span>
-                  <span className="text-green-500">Sim</span>
-                </div>
-              </div>
-              <Button 
-                onClick={openYouTube}
-                className="w-full bg-red-600 hover:bg-red-700 neon-glow"
-                data-testid="button-youtube-watch"
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Assistir no YouTube
-              </Button>
-            </CardContent>
-          </Card>
 
           {/* Discord Community */}
-          <Card className="neon-border">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-indigo-600 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <Card className="glass-card border border-white/10 glow-hover relative overflow-hidden">
+            {/* Card Background Texture */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute top-4 right-4 w-20 h-20 bg-indigo-500/20 rounded-full blur-2xl"></div>
+              <div className="absolute bottom-4 left-4 w-16 h-16 bg-accent/20 rounded-full blur-2xl"></div>
+            </div>
+            
+            <CardHeader className="text-center relative z-10">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-indigo-600/20 to-indigo-800/20 rounded-full flex items-center justify-center border border-indigo-500/20">
+                <svg className="w-10 h-10 text-indigo-400" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026 13.83 13.83 0 0 0 1.226-1.963.074.074 0 0 0-.041-.104 13.201 13.201 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028zM8.02 15.278c-1.182 0-2.157-1.069-2.157-2.38 0-1.312.956-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.956 2.38-2.157 2.38zm7.975 0c-1.183 0-2.157-1.069-2.157-2.38 0-1.312.955-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.946 2.38-2.157 2.38z"/>
                 </svg>
               </div>
-              <CardTitle className="text-2xl font-gaming" data-testid="text-discord-title">DISCORD</CardTitle>
-              <p className="text-muted-foreground">Comunidade e discussões</p>
+              <CardTitle className="text-2xl font-gaming text-white" data-testid="text-discord-title">DISCORD</CardTitle>
+              <p className="text-gray-300 text-sm">Comunidade e discussões</p>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 relative z-10">
               <div className="text-center">
                 <div className="flex items-center justify-center space-x-2 mb-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm font-semibold text-green-500">ONLINE</span>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-sm font-semibold text-green-400">ONLINE</span>
                 </div>
-                <p className="text-sm text-muted-foreground" data-testid="text-discord-members">
+                <p className="text-sm text-gray-400" data-testid="text-discord-members">
                   1.5K membros ativos
                 </p>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Chat ao vivo:</span>
-                  <span className="text-green-500">Ativo</span>
+                  <span className="text-gray-400">Chat ao vivo:</span>
+                  <span className="text-green-400">Ativo</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Avisos:</span>
-                  <span className="text-green-500">Habilitados</span>
+                  <span className="text-gray-400">Avisos:</span>
+                  <span className="text-green-400">Habilitados</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Sorteios:</span>
-                  <span className="text-green-500">Regulares</span>
+                  <span className="text-gray-400">Comunidade:</span>
+                  <span className="text-green-400">Ativa</span>
                 </div>
               </div>
               <Button 
                 onClick={openDiscord}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 neon-glow"
+                className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white glow-hover border-0 py-3"
                 data-testid="button-discord-join"
               >
                 <Users className="mr-2 h-4 w-4" />
@@ -264,6 +252,7 @@ export default function Watch() {
               </Button>
             </CardContent>
           </Card>
+          </div>
         </div>
 
         {/* Schedule */}

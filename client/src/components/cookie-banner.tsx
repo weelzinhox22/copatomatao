@@ -116,179 +116,177 @@ export default function CookieBanner() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-black/80 backdrop-blur-sm animate-fade-in-up">
-      <div className="max-w-4xl mx-auto">
-        <Card className="glass-card border border-white/10 shadow-2xl">
-          <CardContent className="p-6">
+    <div className="fixed bottom-0 left-0 right-0 z-50 p-3 backdrop-blur-sm animate-fade-in-up">
+      <div className="max-w-2xl mx-auto">
+        <Card className="glass-card border border-white/10 shadow-xl">
+          <CardContent className="p-4">
             {!showSettings ? (
-              // Banner Principal
-              <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
-                <div className="flex items-center gap-3 flex-1">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-                    <Cookie className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-heading font-bold text-white mb-1">
-                      🍪 Cookies da Copa Tomatão
-                    </h3>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Usamos cookies para melhorar sua experiência, analisar o tráfego do site e personalizar conteúdo. 
-                      Você pode escolher quais tipos de cookies aceitar.
-                    </p>
-                  </div>
+              // Banner Principal Compacto
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center flex-shrink-0">
+                  <Cookie className="w-4 h-4 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-semibold text-white mb-1">
+                    🍪 Cookies
+                  </h3>
+                  <p className="text-gray-300 text-xs leading-relaxed">
+                    Usamos cookies para melhorar sua experiência. Você pode personalizar suas preferências.
+                  </p>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                <div className="flex gap-2 flex-shrink-0">
                   <Button
                     onClick={handleAcceptAll}
-                    className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white glow-hover border-0 px-6"
+                    size="sm"
+                    className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white border-0 px-3 text-xs h-8"
                   >
-                    <Check className="mr-2 h-4 w-4" />
-                    Aceitar Todos
+                    <Check className="mr-1 h-3 w-3" />
+                    Aceitar
                   </Button>
                   <Button
                     onClick={handleRejectAll}
+                    size="sm"
                     variant="outline"
-                    className="border-gray-600 text-gray-300 hover:bg-white/5 px-6"
+                    className="border-gray-600 text-gray-300 hover:bg-white/5 px-3 text-xs h-8"
                   >
-                    <X className="mr-2 h-4 w-4" />
-                    Rejeitar Todos
+                    <X className="mr-1 h-3 w-3" />
+                    Rejeitar
                   </Button>
                   <Button
                     onClick={() => setShowSettings(true)}
+                    size="sm"
                     variant="outline"
-                    className="border-gray-600 text-gray-300 hover:bg-white/5 px-6"
+                    className="border-gray-600 text-gray-300 hover:bg-white/5 px-2 text-xs h-8"
                   >
-                    <Settings className="mr-2 h-4 w-4" />
-                    Personalizar
+                    <Settings className="h-3 w-3" />
                   </Button>
                 </div>
               </div>
             ) : (
-              // Configurações Detalhadas
-              <div className="space-y-6">
+              // Configurações Detalhadas Compactas
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-heading font-bold text-white">
+                  <h3 className="text-sm font-semibold text-white">
                     Configurações de Cookies
                   </h3>
                   <Button
                     variant="ghost"
-                    size="icon"
+                    size="sm"
                     onClick={() => setShowSettings(false)}
-                    className="text-white hover:bg-white/10"
+                    className="text-white hover:bg-white/10 h-6 w-6 p-0"
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-3 w-3" />
                   </Button>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {/* Cookies Necessários */}
-                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center">
-                        <Shield className="w-5 h-5 text-red-400" />
+                  <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-red-500/20 rounded-full flex items-center justify-center">
+                        <Shield className="w-3 h-3 text-red-400" />
                       </div>
                       <div>
-                        <div className="text-white font-semibold">Cookies Necessários</div>
-                        <div className="text-gray-400 text-sm">Essenciais para o funcionamento do site</div>
+                        <div className="text-white text-xs font-medium">Necessários</div>
+                        <div className="text-gray-400 text-xs">Sempre ativo</div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                        <Check className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="text-green-400 text-sm font-medium">Sempre Ativo</span>
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" />
                     </div>
                   </div>
 
                   {/* Analytics */}
-                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
-                        <BarChart3 className="w-5 h-5 text-blue-400" />
+                  <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-blue-500/20 rounded-full flex items-center justify-center">
+                        <BarChart3 className="w-3 h-3 text-blue-400" />
                       </div>
                       <div>
-                        <div className="text-white font-semibold">Analytics</div>
-                        <div className="text-gray-400 text-sm">Ajuda a entender como você usa o site</div>
+                        <div className="text-white text-xs font-medium">Analytics</div>
+                        <div className="text-gray-400 text-xs">Uso do site</div>
                       </div>
                     </div>
                     <button
                       onClick={() => togglePreference('analytics')}
-                      className={`w-12 h-6 rounded-full transition-colors ${
+                      className={`w-8 h-4 rounded-full transition-colors ${
                         preferences.analytics ? 'bg-primary' : 'bg-gray-600'
                       }`}
                     >
                       <div
-                        className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                          preferences.analytics ? 'translate-x-6' : 'translate-x-0.5'
+                        className={`w-3 h-3 bg-white rounded-full transition-transform ${
+                          preferences.analytics ? 'translate-x-4' : 'translate-x-0.5'
                         }`}
                       />
                     </button>
                   </div>
 
                   {/* Performance */}
-                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                        <Zap className="w-5 h-5 text-yellow-400" />
+                  <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                        <Zap className="w-3 h-3 text-yellow-400" />
                       </div>
                       <div>
-                        <div className="text-white font-semibold">Performance</div>
-                        <div className="text-gray-400 text-sm">Melhora a velocidade e funcionalidade</div>
+                        <div className="text-white text-xs font-medium">Performance</div>
+                        <div className="text-gray-400 text-xs">Velocidade</div>
                       </div>
                     </div>
                     <button
                       onClick={() => togglePreference('performance')}
-                      className={`w-12 h-6 rounded-full transition-colors ${
+                      className={`w-8 h-4 rounded-full transition-colors ${
                         preferences.performance ? 'bg-primary' : 'bg-gray-600'
                       }`}
                     >
                       <div
-                        className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                          preferences.performance ? 'translate-x-6' : 'translate-x-0.5'
+                        className={`w-3 h-3 bg-white rounded-full transition-transform ${
+                          preferences.performance ? 'translate-x-4' : 'translate-x-0.5'
                         }`}
                       />
                     </button>
                   </div>
 
                   {/* Marketing */}
-                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
-                        <Cookie className="w-5 h-5 text-purple-400" />
+                  <div className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-purple-500/20 rounded-full flex items-center justify-center">
+                        <Cookie className="w-3 h-3 text-purple-400" />
                       </div>
                       <div>
-                        <div className="text-white font-semibold">Marketing</div>
-                        <div className="text-gray-400 text-sm">Personalização de conteúdo e anúncios</div>
+                        <div className="text-white text-xs font-medium">Marketing</div>
+                        <div className="text-gray-400 text-xs">Personalização</div>
                       </div>
                     </div>
                     <button
                       onClick={() => togglePreference('marketing')}
-                      className={`w-12 h-6 rounded-full transition-colors ${
+                      className={`w-8 h-4 rounded-full transition-colors ${
                         preferences.marketing ? 'bg-primary' : 'bg-gray-600'
                       }`}
                     >
                       <div
-                        className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                          preferences.marketing ? 'translate-x-6' : 'translate-x-0.5'
+                        className={`w-3 h-3 bg-white rounded-full transition-transform ${
+                          preferences.marketing ? 'translate-x-4' : 'translate-x-0.5'
                         }`}
                       />
                     </button>
                   </div>
                 </div>
 
-                <div className="flex gap-3 pt-4">
+                <div className="flex gap-2 pt-2">
                   <Button
                     onClick={handleSavePreferences}
-                    className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white glow-hover border-0"
+                    size="sm"
+                    className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white border-0 text-xs h-7"
                   >
-                    <Check className="mr-2 h-4 w-4" />
-                    Salvar Preferências
+                    <Check className="mr-1 h-3 w-3" />
+                    Salvar
                   </Button>
                   <Button
                     onClick={() => setShowSettings(false)}
+                    size="sm"
                     variant="outline"
-                    className="border-gray-600 text-gray-300 hover:bg-white/5"
+                    className="border-gray-600 text-gray-300 hover:bg-white/5 text-xs h-7"
                   >
                     Cancelar
                   </Button>
@@ -301,3 +299,4 @@ export default function CookieBanner() {
     </div>
   );
 }
+

@@ -30,6 +30,10 @@ export function usePWAInstall() {
     // Detectar iOS
     const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     
+    // Detectar se é dispositivo móvel
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                     window.innerWidth <= 768;
+    
     // Detectar se já está instalado (modo standalone)
     const standalone = window.matchMedia('(display-mode: standalone)').matches || 
                       (window.navigator as any).standalone === true;
@@ -38,8 +42,8 @@ export function usePWAInstall() {
     const wasInstalled = localStorage.getItem('pwa-installed') === 'true';
     const promptDismissed = localStorage.getItem('pwa-prompt-dismissed') === 'true';
     
-    // Verificar se deve mostrar o prompt
-    const shouldShowPrompt = !standalone && !wasInstalled && !promptDismissed;
+    // Verificar se deve mostrar o prompt (apenas em dispositivos móveis)
+    const shouldShowPrompt = isMobile && !standalone && !wasInstalled && !promptDismissed;
 
     setState({
       canInstall: false, // Será definido pelo evento beforeinstallprompt

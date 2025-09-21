@@ -29,6 +29,11 @@ import Draft from "@/pages/draft";
 import Blog from "@/pages/blog";
 import CookiePolicy from "@/pages/cookie-policy";
 import PrivacyPolicy from "@/pages/privacy-policy";
+import FAQ from "@/pages/faq";
+import Contact from "@/pages/contact";
+import BugReport from "@/pages/bug-report";
+import Statistics from "@/pages/statistics";
+import Rankings from "@/pages/rankings";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -56,6 +61,11 @@ function Router() {
             <Route path="/blog" component={Blog} />
             <Route path="/cookie-policy" component={CookiePolicy} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
+            <Route path="/faq" component={FAQ} />
+            <Route path="/contact" component={Contact} />
+            <Route path="/bug-report" component={BugReport} />
+            <Route path="/statistics" component={Statistics} />
+            <Route path="/rankings" component={Rankings} />
             <Route component={NotFound} />
           </Switch>
         </ScrollToTop>
