@@ -65,11 +65,6 @@ export default function Footer() {
                   Regras
                 </Link>
               </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors duration-200" data-testid="link-prizes">
-                  Premiação
-                </a>
-              </li>
             </ul>
           </div>
           

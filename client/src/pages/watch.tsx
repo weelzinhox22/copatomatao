@@ -257,48 +257,92 @@ export default function Watch() {
 
         {/* Schedule */}
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
-          {/* Upcoming Matches */}
+          {/* Tournament Calendar */}
           <Card className="neon-border">
             <CardHeader>
               <CardTitle className="text-2xl font-gaming flex items-center">
                 <Calendar className="mr-2 h-6 w-6 text-primary" />
-                <span className="gradient-text">PRÓXIMAS</span> PARTIDAS
+                <span className="gradient-text">CALENDÁRIO</span> DO TORNEIO
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {upcomingMatches.length === 0 ? (
-                <div className="text-center py-8">
-                  <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground" data-testid="text-no-upcoming-matches">
-                    Nenhuma partida agendada no momento.
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {upcomingMatches.map((match: any, index: number) => (
-                    <div key={match.id} className="tournament-card rounded-lg p-4" data-testid={`upcoming-match-${index}`}>
-                      <div className="flex items-center justify-between mb-2">
-                        <Badge variant="outline" data-testid={`upcoming-match-phase-${index}`}>
-                          {match.phase}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground" data-testid={`upcoming-match-time-${index}`}>
-                          {new Date(match.scheduledAt).toLocaleString('pt-BR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </span>
-                      </div>
-                      <div className="text-center">
-                        <span className="font-medium" data-testid={`upcoming-match-teams-${index}`}>
-                          Time 1 vs Time 2
-                        </span>
-                      </div>
+              <div className="space-y-4">
+                {/* Semana 1 */}
+                <div className="p-3 bg-muted/20 rounded-lg border border-primary/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge className="bg-primary text-primary-foreground">SEMANA 1</Badge>
+                    <span className="text-sm text-muted-foreground">4-10 Out</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">4 Out (Sex):</span>
+                      <span className="text-white">Abertura do Torneio</span>
                     </div>
-                  ))}
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">6 Out (Dom):</span>
+                      <span className="text-white">Primeira Rodada</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">8 Out (Ter):</span>
+                      <span className="text-white">Segunda Rodada</span>
+                    </div>
+                  </div>
                 </div>
-              )}
+
+                {/* Semana 2 */}
+                <div className="p-3 bg-muted/20 rounded-lg border border-secondary/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge className="bg-secondary text-secondary-foreground">SEMANA 2</Badge>
+                    <span className="text-sm text-muted-foreground">11-17 Out</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">13 Out (Dom):</span>
+                      <span className="text-white">Quartas de Final</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">15 Out (Ter):</span>
+                      <span className="text-white">Semifinais</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Semana 3 */}
+                <div className="p-3 bg-muted/20 rounded-lg border border-accent/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge className="bg-accent text-accent-foreground">SEMANA 3</Badge>
+                    <span className="text-sm text-muted-foreground">18-24 Out</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">20 Out (Dom):</span>
+                      <span className="text-white">Final dos Vencedores</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">22 Out (Ter):</span>
+                      <span className="text-white">Final dos Segundos</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Semana 4 */}
+                <div className="p-3 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg border border-yellow-500/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">GRANDE FINAL</Badge>
+                    <span className="text-sm text-muted-foreground">25-31 Out</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">27 Out (Dom):</span>
+                      <span className="text-yellow-400 font-semibold">CAMPEONATO</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">29 Out (Ter):</span>
+                      <span className="text-white">Cerimônia de Encerramento</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
@@ -332,11 +376,11 @@ export default function Watch() {
                 
                 <div className="p-3 bg-primary/10 rounded-lg border border-primary/20">
                   <div className="flex items-center space-x-2">
-                    <Badge className="bg-primary text-primary-foreground">ESPECIAL</Badge>
-                    <span className="font-medium">Grande Final</span>
+                    <Badge className="bg-primary text-primary-foreground">PRÓXIMO</Badge>
+                    <span className="font-medium">Início do Campeonato</span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
-                    28 de Dezembro - 16:00 às 20:00
+                    4 de Outubro - 20:00 às 23:00
                   </p>
                 </div>
               </div>
